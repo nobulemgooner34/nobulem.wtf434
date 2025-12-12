@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ace (@ac.me)</title>
+    <link rel="icon" type="image/x-icon" href="https://i.pinimg.com/736x/e4/2e/77/e42e7768c6d2cc5fbd0f3bc09338d145.jpg">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1625 0%, #2a2635 100%);
+            color: #c4b5d0;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .border-text {
+            position: fixed;
+            font-size: 0.9rem;
+            color: #6b5b7a;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: bold;
+            white-space: nowrap;
+            opacity: 0.4;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .border-top {
+            top: 20px;
+            left: 0;
+            animation: scrollLeft 40s linear infinite;
+        }
+
+        .border-bottom {
+            bottom: 20px;
+            left: 0;
+            animation: scrollRight 40s linear infinite;
+        }
+
+        .border-left {
+            left: 20px;
+            top: 0;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            animation: scrollDown 35s linear infinite;
+        }
+
+        .border-right {
+            right: 20px;
+            top: 0;
+            writing-mode: vertical-rl;
+            animation: scrollUp 35s linear infinite;
+        }
+
+        @keyframes scrollLeft {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        @keyframes scrollRight {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes scrollDown {
+            0% { transform: translateY(0) rotate(180deg); }
+            100% { transform: translateY(-50%) rotate(180deg); }
+        }
+
+        @keyframes scrollUp {
+            0% { transform: translateY(-50%); }
+            100% { transform: translateY(0); }
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1625;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #6b5b7a;
+            border-radius: 5px;
+        }
+
+        #press-to-enter {
+            position: fixed;
+            inset: 0;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(26, 22, 37, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            cursor: pointer;
+            transition: opacity 0.8s ease-out;
+        }
+
+        #press-to-enter.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .enter-text {
+            font-size: clamp(2rem, 5vw, 4rem);
+            color: #b19cd9;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            animation: pulse 2s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(177, 156, 217, 0.6);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #1a1625;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 9999;
+            transition: opacity 0.8s ease-out;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-text {
+            font-size: 3rem;
+            color: #8b7b9a;
+            font-weight: bold;
+            animation: pulse 1.5s ease-in-out infinite;
+            margin-bottom: 1.5rem;
+        }
+
+        .splash-text {
+            font-size: 1.2rem;
+            color: #6b5b7a;
+            font-style: italic;
+            text-align: center;
+            max-width: 90%;
+        }
+
+        .control-buttons {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .control-btn {
+            width: 55px;
+            height: 55px;
+            background: rgba(42, 38, 53, 0.8);
+            border: 2px solid rgba(107, 91, 122, 0.4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .control-btn:hover {
+            background: rgba(107, 91, 122, 0.6);
+            border-color: rgba(139, 123, 154, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .control-btn svg {
+            color: #c4b5d0;
+            width: 24px;
+            height: 24px;
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(42, 38, 53, 0.95);
+            color: #c4b5d0;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            border: 1px solid rgba(107, 91, 122, 0.4);
+        }
+
+        .control-btn:hover .tooltip {
+            opacity: 1;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(26, 22, 37, 0.9);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: rgba(42, 38, 53, 0.95);
+            border: 2px solid rgba(107, 91, 122, 0.4);
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 550px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(107, 91, 122, 0.3);
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            color: #c4b5d0;
+            font-weight: bold;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: #c4b5d0;
+            cursor: pointer;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+        }
+
+        .close-button:hover {
+            background: rgba(107, 91, 122, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .social-item {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            padding: 1.2rem;
+            background: rgba(26, 22, 37, 0.5);
+            border: 1px solid rgba(107, 91, 122, 0.3);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .social-item:hover {
+            background: rgba(107, 91, 122, 0.2);
+            border-color: rgba(139, 123, 154, 0.5);
+            transform: translateX(8px);
+        }
+
+        .social-item.clickable {
+            cursor: pointer;
+        }
+
+        .social-item:not(.clickable) {
+            cursor: default;
+        }
+
+        .social-icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: rgba(107, 91, 122, 0.2);
+            border-radius: 10px;
+        }
+
+        .social-icon svg {
+            width: 26px;
+            height: 26px;
+            color: #c4b5d0;
+        }
+
+        .social-content {
+            flex: 1;
+        }
+
+        .social-label {
+            font-size: 0.8rem;
+            color: #8b7b9a;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .social-link {
+            color: #c4b5d0;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-link:hover {
+            color: #e5d5f0;
+        }
+
+        .social-text {
+            color: #c4b5d0;
+            font-size: 1rem;
+        }
+
+        #main-content {
+            position: relative;
+            z-index: 10;
+            padding: 6rem 2rem 2rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            opacity: 0;
+            transition: opacity 0.8s ease-in;
+        }
+
+        #main-content.visible {
+            opacity: 1;
+        }
+
+        .section {
+            background: rgba(42, 38, 53, 0.6);
+            border: 1px solid rgba(107, 91, 122, 0.3);
+            border-radius: 20px;
+            padding: 2.5rem;
+            backdrop-filter: blur(15px);
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            border-color: rgba(139, 123, 154, 0.5);
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-pic {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 3px solid rgba(107, 91, 122, 0.5);
+            object-fit: cover;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .profile-info h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+            color: #e5d5f0;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: rgba(107, 91, 122, 0.2);
+            border: 1px solid rgba(107, 91, 122, 0.4);
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #b19cd9;
+            box-shadow: 0 0 15px rgba(177, 156, 217, 0.6);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .bio {
+            font-size: 1.15rem;
+            color: #c4b5d0;
+            line-height: 1.7;
+            padding: 1.5rem;
+            background: rgba(26, 22, 37, 0.3);
+            border-radius: 12px;
+            border-left: 3px solid rgba(107, 91, 122, 0.5);
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            color: #e5d5f0;
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid rgba(107, 91, 122, 0.3);
+        }
+
+        .spotify-card {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(26, 22, 37, 0.4);
+            border: 1px solid rgba(107, 91, 122, 0.3);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .album-art {
+            width: 90px;
+            height: 90px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .song-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #e5d5f0;
+        }
+
+        .song-info p {
+            color: #8b7b9a;
+            font-size: 1rem;
+        }
+
+        .spotify-player {
+            margin-top: 1rem;
+            width: 100%;
+            height: 152px;
+            border-radius: 12px;
+            border: none;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .info-card {
+            padding: 1.5rem;
+            background: rgba(26, 22, 37, 0.4);
+            border-radius: 12px;
+            border: 1px solid rgba(107, 91, 122, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            background: rgba(107, 91, 122, 0.2);
+            border-color: rgba(139, 123, 154, 0.5);
+            transform: translateY(-4px);
+        }
+
+        .info-card strong {
+            display: block;
+            color: #8b7b9a;
+            margin-bottom: 0.6rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-card p {
+            color: #c4b5d0;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .song-item {
+            padding: 1.2rem;
+            background: rgba(26, 22, 37, 0.4);
+            border-radius: 10px;
+            border: 1px solid rgba(107, 91, 122, 0.3);
+            color: #c4b5d0;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .song-item:hover {
+            background: rgba(107, 91, 122, 0.2);
+            transform: translateX(8px);
+        }
+
+        .song-item strong {
+            color: #b19cd9;
+            margin-right: 0.5rem;
+        }
+
+        .fun-fact {
+            padding: 1.2rem;
+            background: rgba(26, 22, 37, 0.4);
+            border-radius: 10px;
+            border: 1px solid rgba(107, 91, 122, 0.3);
+            margin-bottom: 1rem;
+            color: #c4b5d0;
+            transition: all 0.3s ease;
+        }
+
+        .fun-fact:hover {
+            background: rgba(107, 91, 122, 0.2);
+            transform: translateX(8px);
+        }
+
+        .poems-section {
+            margin-top: 2rem;
+        }
+
+        .poems-container {
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            scroll-snap-type: x mandatory;
+        }
+
+        .poem-card {
+            min-width: 400px;
+            max-width: 400px;
+            background: rgba(26, 22, 37, 0.6);
+            border: 1px solid rgba(107, 91, 122, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            scroll-snap-align: start;
+            position: relative;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .poem-header {
+            text-align: center;
+            font-size: 1.3rem;
+            color: #e5d5f0;
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+            border-bottom: 2px solid rgba(107, 91, 122, 0.3);
+            padding-bottom: 1rem;
+        }
+
+        .poem-lines {
+            background: 
+                repeating-linear-gradient(
+                    transparent,
+                    transparent 29px,
+                    rgba(107, 91, 122, 0.3) 29px,
+                    rgba(107, 91, 122, 0.3) 30px
+                );
+            padding: 1rem 0;
+            min-height: 300px;
+        }
+
+        .poem-line {
+            line-height: 30px;
+            height: 30px;
+            color: #c4b5d0;
+            font-size: 0.95rem;
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .poem-card {
+                min-width: 300px;
+                max-width: 300px;
+            }
+
+            .profile-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 2rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .control-buttons {
+                bottom: 1rem;
+                left: 1rem;
+            }
+
+            #main-content {
+                padding: 5rem 1rem 1rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="border-text border-top" id="borderTop"></div>
+    <div class="border-text border-bottom" id="borderBottom"></div>
+    <div class="border-text border-left" id="borderLeft"></div>
+    <div class="border-text border-right" id="borderRight"></div>
+
+    <div id="press-to-enter">
+        <div class="enter-text">Press To Enter</div>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="Schubert%20-%20Serenade%20(arr.%20Liszt).mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="control-buttons">
+        <button class="control-btn" id="muteButton">
+            <i data-lucide="volume-2" id="muteIcon"></i>
+            <span class="tooltip" id="muteTooltip">Mute</span>
+        </button>
+        <button class="control-btn" id="socialsButton">
+            <i data-lucide="link"></i>
+            <span class="tooltip">Socials</span>
+        </button>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Socials</h2>
+                <button class="close-button" id="closeModal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <div class="social-item">
+                <div class="social-icon"><i data-lucide="mail"></i></div>
+                <div class="social-content">
+                    <div class="social-label">Email</div>
+                    <div class="social-text">Aarmadillozz@gmail.com</div>
+                </div>
+            </div>
+
+            <a href="https://open.spotify.com/user/ckmsyina41ysuaxzi3wsz0qqo" target="_blank" class="social-item clickable">
+                <div class="social-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                </div>
+                <div class="social-content">
+                    <div class="social-label">Spotify</div>
+                    <div class="social-link">Ace</div>
+                </div>
+            </a>
+
+            <div class="social-item">
+                <div class="social-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                </div>
+                <div class="social-content">
+                    <div class="social-label">Discord</div>
+                    <div class="social-text">ac.me</div>
+                </div>
+            </div>
+
+            <a href="https://x.com/AceDoesntLeave" target="_blank" class="social-item clickable">
+                <div class="social-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </div>
+                <div class="social-content">
+                    <div class="social-label">Twitter</div>
+                    <div class="social-link">@AceDoesntLeave</div>
+                </div>
+            </a>
+
+            <a href="https://instagram.com/armadillosace" target="_blank" class="social-item clickable">
+                <div class="social-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
+                </div>
+                <div class="social-content">
+                    <div class="social-label">Instagram</div>
+                    <div class="social-link">@ArmadillosAce</div>
+                </div>
+            </a>
+
+            <a href="https://github.com/Armadilloh" target="_blank" class="social-item clickable">
+                <div class="social-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                </div>
+                <div class="social-content">
+                    <div class="social-label">GitHub</div>
+                    <div class="social-link">Armadilloh</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div id="loading-screen">
+        <div class="loading-text">Loading...</div>
+        <div class="splash-text" id="splash-text"></div>
+    </div>
+
+    <div id="main-content">
+        <div class="section">
+            <div class="profile-section">
+                <img src="https://i.ibb.co/tpdV8KFm/download-10.jpg" alt="Profile" class="profile-pic">
+                <div class="profile-info">
+                    <h1>Ace (@ac.me)</h1>
+                    <div class="status">
+                        <div class="status-indicator"></div>
+                        <span>wish i knew what a fuck was for me to give it!</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bio">15, Arab, Smarter than you.</div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Now Playing</h2>
+            <div class="spotify-card" id="now-playing">
+                <img src="https://i.ibb.co/dJLdVfFT/download-8.jpg" alt="Album Art" class="album-art" id="album-art">
+                <div class="song-info">
+                    <h3 id="song-title">Not currently playing</h3>
+                    <p id="song-artist">Not playing any songs...</p>
+                </div>
+            </div>
+            <div id="spotify-player-container"></div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">About Me</h2>
+            <div class="grid-3">
+                <div class="info-card">
+                    <strong>Age</strong>
+                    <p>15</p>
+                </div>
+                <div class="info-card">
+                    <strong>Location</strong>
+                    <p>Egypt</p>
+                </div>
+                <div class="info-card">
+                    <strong>Pronouns</strong>
+                    <p>He/Him</p>
+                </div>
+                <div class="info-card">
+                    <strong>Star Sign</strong>
+                    <p>Virgo ♍</p>
+                </div>
+                <div class="info-card">
+                    <strong>Hobbies</strong>
+                    <p>Piano, Stargazing, Programming, A bit of Poetry, Gardening(Not very good)</p>
+                </div>
+                <div class="info-card">
+                    <strong>Music</strong>
+                    <p>Rap Rock, Hardcore Hip Hop, Pop</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="section">
+                <h2 class="section-title">Favorite Songs</h2>
+                <div class="song-item"><strong>1.</strong> World we knew (over and over) - Frank Sinatra</div>
+                <div class="song-item"><strong>2.</strong> Cleaning out my closet - Eminem</div>
+                <div class="song-item"><strong>3.</strong> Unshaken - D'Angelo</div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Fun Facts</h2>
+                <div class="fun-fact">💫 top 10 yapper rated worldwide</div>
+                <div class="fun-fact">🔎 i HATE dumb people</div>
+                <div class="fun-fact">🌙 im basically nocturnal at this point??</div>
+                <div class="fun-fact">☕ did someone say tea? no?</div>
+            </div>
+        </div>
+
+        <div class="section poems-section">
+            <h2 class="section-title">Poems</h2>
+            <div class="poems-container" id="poemsContainer">
+                <!-- Poem cards will be inserted here -->
+                <!-- Example poem structure:
+                <div class="poem-card">
+                    <div class="poem-header">Poem Title Here</div>
+                    <div class="poem-lines">
+                        <div class="poem-line">First line of poem</div>
+                        <div class="poem-line">Second line of poem</div>
+                        <div class="poem-line">Third line of poem</div>
+                    </div>
+                </div>
+                -->
+    <script>
+        const splashTexts = [
+            "hey its me Ace",
+            "hi ghost",
+            "hi quicksy",
+            "hi emplic",
+            "hi loaf",
+            "can u stop looking at me",
+            "i like m&m",
+            "hi pawzy",
+            "baka!",
+            "fredrick might like this (inside joke)",
+            "All cAts eAt!",
+        ];
+
+        document.getElementById('splash-text').textContent = splashTexts[Math.floor(Math.random() * splashTexts.length)];
+
+        // Create infinite scrolling border text
+        function createBorderText() {
+            const textString = "BURN IN HELL ✦ BURN IN HEAVEN ✦ ";
+            const repeatCount = 50;
+            
+            document.getElementById('borderTop').textContent = textString.repeat(repeatCount);
+            document.getElementById('borderBottom').textContent = textString.repeat(repeatCount);
+            document.getElementById('borderLeft').textContent = textString.repeat(repeatCount);
+            document.getElementById('borderRight').textContent = textString.repeat(repeatCount);
+        }
+
+        createBorderText();
+
+        lucide.createIcons();
+
+        // Press to Enter functionality
+        const pressToEnter = document.getElementById('press-to-enter');
+        
+        pressToEnter.addEventListener('click', function() {
+            pressToEnter.classList.add('hidden');
+            // Try to play music when entering
+            bgMusic.play().catch(function(err) {
+                console.log('Autoplay blocked, will play on next interaction');
+            });
+        });
+
+        const bgMusic = document.getElementById('bgMusic');
+        const muteButton = document.getElementById('muteButton');
+        const muteTooltip = document.getElementById('muteTooltip');
+        let isMuted = false;
+
+        muteButton.addEventListener('click', function() {
+            isMuted = !isMuted;
+            bgMusic.muted = isMuted;
+            
+            // Replace the entire icon element
+            const iconContainer = muteButton.querySelector('i');
+            const newIcon = document.createElement('i');
+            newIcon.id = 'muteIcon';
+            newIcon.setAttribute('data-lucide', isMuted ? 'volume-x' : 'volume-2');
+            iconContainer.replaceWith(newIcon);
+            
+            muteTooltip.textContent = isMuted ? 'Unmute' : 'Mute';
+            lucide.createIcons();
+        });
+
+        const socialsButton = document.getElementById('socialsButton');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const closeModal = document.getElementById('closeModal');
+
+        socialsButton.addEventListener('click', function() {
+            modalOverlay.classList.add('active');
+            lucide.createIcons();
+        });
+
+        closeModal.addEventListener('click', function() {
+            modalOverlay.classList.remove('active');
+        });
+
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('active');
+            }
+        });
+
+        setTimeout(function() {
+            document.getElementById('loading-screen').classList.add('hidden');
+            document.getElementById('main-content').classList.add('visible');
+        }, 2000);
+
+        document.addEventListener('click', function playOnClick() {
+            if (bgMusic.paused && !isMuted) {
+                bgMusic.play().then(function() {
+                    console.log('Music started playing');
+                }).catch(function(err) {
+                    console.log('Error playing audio:', err);
+                });
+            }
+        }, { once: false });
+
+        const SPOTIFY_CLIENT_ID = '211a95f3715a49afa15efe564ab0d471';
+        const SPOTIFY_CLIENT_SECRET = '2441754df7394b95b8b5a06def3f1df8';
+        const SPOTIFY_REFRESH_TOKEN = 'AQAygJQ_reRZP2d255pm3kbmmEmG_glXzcWPCX-dOS8cRG7WpM9BnFEgCP6ImVsJ0hgd8DUMLthHuvMIgs_GDlyhsS1dX9BmJ3uBUW22X-YKbQ5Jmk0zZKqRAMFyGjNThdA';
+
+        async function getAccessToken() {
+            const response = await fetch('https://accounts.spotify.com/api/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Basic ' + btoa(SPOTIFY_CLIENT_ID + ':' + SPOTIFY_CLIENT_SECRET)
+                },
+                body: 'grant_type=refresh_token&refresh_token=' + SPOTIFY_REFRESH_TOKEN
+            });
+            const data = await response.json();
+            return data.access_token;
+        }
+
+        async function getCurrentlyPlaying() {
+            try {
+                const accessToken = await getAccessToken();
+                const response = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken
+                    }
+                });
+
+                if (response.status === 204 || !response.ok) {
+                    return null;
+                }
+
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching currently playing:', error);
+                return null;
+            }
+        }
+
+        async function updateSpotifyData() {
+            const nowPlaying = await getCurrentlyPlaying();
+
+            if (nowPlaying && nowPlaying.item) {
+                document.getElementById('song-title').textContent = nowPlaying.item.name;
+                document.getElementById('song-artist').textContent = nowPlaying.item.artists.map(a => a.name).join(', ');
+                document.getElementById('album-art').src = nowPlaying.item.album.images[0]?.url || 'https://via.placeholder.com/90';
+
+                const trackId = nowPlaying.item.id;
+                const progressMs = nowPlaying.progress_ms || 0;
+                const progressSeconds = Math.floor(progressMs / 1000);
+
+                const playerContainer = document.getElementById('spotify-player-container');
+                playerContainer.innerHTML = `
+                    <iframe
+                        class="spotify-player"
+                        src="https://open.spotify.com/embed/track/${trackId}?utm_source=generator&t=${progressSeconds}"
+                        frameBorder="0"
+                        allowfullscreen=""
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                        loading="lazy">
+                    </iframe>
+                `;
+            }
+        }
+
+        updateSpotifyData();
+        setInterval(updateSpotifyData, 20000);
+
+        // ============================================
+        // POEMS SYSTEM - Add your poems below
+        // ============================================
+const poems = [
+    {
+        title: "All in",
+        lines: [
+            "Of Quiet Birds And Restless",
+            "Hearts",
+            " ",
+            "Only You Could Play Me",
+            "Like a Card",
+            " ",
+            "You Leaving Me Was Hard Back Then",
+            " ",
+            "Convincing Me You Had a Heart I'd Win",
+            " ",
+            "If I Ever Had to Bet On You, I'd Go All In."
+        ]
+    },
+
+    {
+        title: "Grief",
+        lines: [
+            "A Grief That Was Never Finished",
+            "A Song that was never sung;",
+            "A Bell That Was Hit,",
+            "but never Rung,",
+
+            "A Fault i Can't Mourn",
+            "A Thought that wasnt Born",
+            "for all the Sorrow i see",
+            "it's like cutting down a tree",
+            "Nothing Remains of what stood ",
+            "tall",
+            "Everything Will Fall,",
+
+            "All my Grief is in the past",
+            "And with my future ",
+            "I do not concern",
+            "For I am A Human in the end",
+            "who From His Past Mistakes learn,",
+
+            "They say Grief has 5 stages",
+            "and this is often true,",
+            "But The Real thing to Grief upon,",
+            "is what remains of you."
+        ]
+    }
+];
+
+        function renderPoems() {
+            const container = document.getElementById('poemsContainer');
+            container.innerHTML = '';
+            
+            // Render poems in reverse order (newest first/rightmost)
+            poems.slice().reverse().forEach(poem => {
+                const poemCard = document.createElement('div');
+                poemCard.className = 'poem-card';
+                
+                const header = document.createElement('div');
+                header.className = 'poem-header';
+                header.textContent = poem.title;
+                
+                const linesContainer = document.createElement('div');
+                linesContainer.className = 'poem-lines';
+                
+                poem.lines.forEach(lineText => {
+                    const line = document.createElement('div');
+                    line.className = 'poem-line';
+                    line.textContent = lineText;
+                    linesContainer.appendChild(line);
+                });
+                
+                poemCard.appendChild(header);
+                poemCard.appendChild(linesContainer);
+                container.appendChild(poemCard);
+            });
+        }
+
+        renderPoems();
+    </script>
+</body>
+</html>
+
+<!-- 
+================================================
+Regarding this site:
+================================================
+
+                fuck u gng what u expecting to see here?
+                go have a life or something

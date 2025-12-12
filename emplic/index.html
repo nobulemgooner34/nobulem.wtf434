@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emplic - nobulem.wtf</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Flashlight effect */
+        .flashlight {
+            position: fixed;
+            width: 900px;
+            height: 900px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 40%, transparent 70%);
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.2s ease;
+        }
+
+        @media (max-width: 768px) {
+            .flashlight {
+                width: 600px;
+                height: 600px;
+            }
+        }
+
+        /* Animated grid background */
+        .grid-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridScroll 30s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes gridScroll {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(60px, 60px); }
+        }
+
+        /* Subtle floating orbs */
+        .orb-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.015);
+            filter: blur(60px);
+            animation: floatOrb 40s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 600px;
+            height: 600px;
+            bottom: -150px;
+            right: -150px;
+            animation-delay: 15s;
+        }
+
+        .orb-3 {
+            width: 450px;
+            height: 450px;
+            top: 40%;
+            right: 10%;
+            animation-delay: 30s;
+        }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(100px, -100px) scale(1.1); }
+            66% { transform: translate(-100px, 100px) scale(0.9); }
+        }
+
+        /* Glass morphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-4px);
+        }
+
+        /* Enter page */
+        #enter-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            background: #000;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        #enter-page.hidden {
+            opacity: 0;
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+
+        .enter-profile {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 30px;
+            animation: floatProfile 4s ease-in-out infinite;
+            position: relative;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        @keyframes floatProfile {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .enter-title {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: -2px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.2s;
+            z-index: 10;
+            position: relative;
+        }
+
+        .enter-subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.4s;
+            z-index: 10;
+            position: relative;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+        }
+
+        .enter-btn {
+            padding: 14px 50px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards 0.6s;
+            position: relative;
+            z-index: 10;
+        }
+
+        .enter-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Main content */
+        #main-content {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease 0.4s;
+            position: relative;
+            z-index: 10;
+        }
+
+        #main-content.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Banner */
+        .banner {
+            width: 100%;
+            height: 250px;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        @media (max-width: 768px) {
+            .banner {
+                height: 180px;
+            }
+        }
+
+        /* Profile section */
+        .profile-section {
+            max-width: 900px;
+            margin: -90px auto 0;
+            padding: 0 30px 80px;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+            .profile-section {
+                margin: -70px auto 0;
+                padding: 0 20px 60px;
+            }
+        }
+
+        .profile-card {
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 20px;
+            animation: slideInUp 0.6s ease forwards;
+        }
+
+        @media (max-width: 768px) {
+            .profile-card {
+                padding: 25px;
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+
+        .profile-pic {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: transform 0.4s ease;
+        }
+
+        @media (max-width: 768px) {
+            .profile-pic {
+                width: 90px;
+                height: 90px;
+            }
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-info h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        @media (max-width: 768px) {
+            .profile-info h1 {
+                font-size: 2rem;
+            }
+        }
+
+        .profile-info p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* Quote section */
+        .quote-section {
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin-bottom: 20px;
+            animation: slideInUp 0.6s ease forwards 0.2s;
+            opacity: 0;
+            border-left: 3px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .quote-section {
+                padding: 20px 25px;
+            }
+        }
+
+        .quote-section.visible {
+            opacity: 1;
+        }
+
+        .quote-text {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            .quote-text {
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Stats Grid */
+        .stats-section {
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            animation: slideInUp 0.6s ease forwards 0.3s;
+            opacity: 0;
+        }
+
+        @media (max-width: 768px) {
+            .stats-section {
+                padding: 25px 20px;
+            }
+        }
+
+        .stats-section.visible {
+            opacity: 1;
+        }
+
+        .stats-section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stat-item {
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .stat-subtext {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 5px;
+        }
+
+        /* Connections */
+        .connections {
+            border-radius: 16px;
+            padding: 30px;
+            animation: slideInUp 0.6s ease forwards 0.4s;
+            opacity: 0;
+        }
+
+        @media (max-width: 768px) {
+            .connections {
+                padding: 25px 20px;
+            }
+        }
+
+        .connections.visible {
+            opacity: 1;
+        }
+
+        .connections h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .connection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .connection-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .connection-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .connection-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .connection-item i {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .connection-item span {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .enter-title {
+                font-size: 2.5rem;
+            }
+            
+            .enter-profile {
+                width: 120px;
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Flashlight effect -->
+    <div class="flashlight"></div>
+
+    <!-- Animated background -->
+    <div class="grid-background"></div>
+    <div class="orb-container">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Enter Page -->
+    <div id="enter-page">
+        <img src="https://cdn.discordapp.com/avatars/868879474597433344/9c093308e0e5e91d8718a343c7719014.webp?size=1024" 
+             alt="Profile" 
+             class="enter-profile">
+        <h1 class="enter-title">Emplic</h1>
+        <p class="enter-subtitle">i don't code, i imagine</p>
+        <button class="enter-btn" onclick="enterSite()">Enter</button>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        <div class="banner"></div>
+
+        <div class="profile-section">
+            <div class="profile-card glass">
+                <div class="profile-header">
+                    <img src="https://cdn.discordapp.com/avatars/868879474597433344/9c093308e0e5e91d8718a343c7719014.webp?size=1024" 
+                         alt="Emplic" 
+                         class="profile-pic">
+                    <div class="profile-info">
+                        <h1>Emplic</h1>
+                        <p>i don't code, i imagine</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quote-section glass">
+                <div class="quote-text" id="quote-text"></div>
+            </div>
+
+            <div class="stats-section glass">
+                <h2>Music</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">Favorite Artists</div>
+                        <div class="stat-value">Nemzz, Drake</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Most Listened</div>
+                        <div class="stat-value">Gata Only</div>
+                        <div class="stat-subtext">6-7 times 👋🤣</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connections glass">
+                <h2>Links</h2>
+                <div class="connection-grid">
+                    <a href="https://discord.com/users/868879474597433344" target="_blank" class="connection-item">
+                        <i class="fab fa-discord"></i>
+                        <span>Discord</span>
+                    </a>
+                    <a href="https://github.com/emplic" target="_blank" class="connection-item">
+                        <i class="fab fa-github"></i>
+                        <span>GitHub</span>
+                    </a>
+                    <a href="https://www.roblox.com/users/1081727498/profile" target="_blank" class="connection-item">
+                        <i class="fas fa-gamepad"></i>
+                        <span>Roblox</span>
+                    </a>
+                    <a href="https://open.spotify.com/niggaboy" target="_blank" class="connection-item">
+                        <i class="fab fa-spotify"></i>
+                        <span>Spotify</span>
+                    </a>
+                    <a href="https://steamcommunity.com/id/76561199159120070" target="_blank" class="connection-item">
+                        <i class="fab fa-steam"></i>
+                        <span>Steam</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quotes
+        const quotes = [
+            "i don't code, i imagine",
+            "creativity over complexity",
+            "dreams don't need semicolons",
+            "building worlds, not just websites",
+            "imagination is the best framework",
+            "thinking in possibilities",
+            "ideas before implementation",
+            "vision first, code later"
+        ];
+
+        // Set random quote
+        function setRandomQuote() {
+            const quote = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById('quote-text').textContent = `"${quote}"`;
+        }
+
+        setRandomQuote();
+
+        // Flashlight effect
+        const flashlight = document.querySelector('.flashlight');
+
+        document.addEventListener('mousemove', (e) => {
+            flashlight.style.left = e.clientX + 'px';
+            flashlight.style.top = e.clientY + 'px';
+        });
+
+        // Touch support
+        document.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            flashlight.style.left = touch.clientX + 'px';
+            flashlight.style.top = touch.clientY + 'px';
+        });
+
+        // Enter site
+        function enterSite() {
+            const enterPage = document.getElementById('enter-page');
+            const mainContent = document.getElementById('main-content');
+            
+            enterPage.classList.add('hidden');
+            
+            setTimeout(() => {
+                mainContent.classList.add('visible');
+                setTimeout(() => {
+                    document.querySelector('.quote-section').classList.add('visible');
+                    document.querySelector('.stats-section').classList.add('visible');
+                    document.querySelector('.connections').classList.add('visible');
+                }, 200);
+            }, 400);
+        }
+    </script>
+</body>
+</html>
