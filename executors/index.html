@@ -1,1045 +1,415 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>nobulem.wtf – Executors</title>
-  <meta name="description" content="nobulem.wtf – Live executor status and information">
-  <link rel="icon" type="image/png" href="https://i.ibb.co/NdNpCJ4v/image-2.png">
-  <style>
-    :root{
-      --bg: #0a0a0a;
-      --bg-2: #111111;
-      --card: #151515;
-      --text: #e0e0e0;
-      --muted: #999999;
-      --line: #222222;
-      --accent: #d0d0d0;
-      --shadow: 0 8px 32px rgba(0,0,0,.4);
-      --radius: 16px;
-      --speed: 400ms;
-      --green: #10B981;
-      --red: #EF4444;
-      --blue: #3B82F6;
-      --purple: #8B5CF6;
-    }
-    *{box-sizing:border-box; margin:0; padding:0;}
-    html,body{height:100%}
-    html{scroll-behavior:smooth}
-    body{
-      background: var(--bg);
-      color:var(--text);
-      font: 600 14px/1.5 ui-sans-serif, -apple-system, system-ui, Segoe UI, Roboto, Helvetica, Arial;
-      letter-spacing:0.3px;
-      overflow-x:hidden;
-    }
-    
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 12px;
-    }
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nobulem — Executors</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/NdNpCJ4v/image-2.png">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-    ::-webkit-scrollbar-track {
-      background: var(--bg);
-      border-left: 1px solid var(--line);
-    }
+    <style>
+        :root {
+            --bg-color: #040205;
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --primary-purple: #c084fc;
+            --primary-green: #4ade80;
+            --primary-red: #f87171;
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(13, 13, 13, 0.6);
+            --font-display: 'Poppins', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
 
-    ::-webkit-scrollbar-thumb {
-      background: var(--card);
-      border-radius: 6px;
-      border: 2px solid var(--bg);
-    }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--bg-color); color: var(--text-main); font-family: var(--font-body); overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background: #252525;
-    }
+        .bg-glow { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100vw; height: 100vh; background: radial-gradient(circle at 15% 50%, rgba(76, 29, 149, 0.15), transparent 40%), radial-gradient(circle at 85% 30%, rgba(192, 132, 252, 0.1), transparent 40%); z-index: -2; pointer-events: none; }
+        .stars { position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='1' fill='rgba(255,255,255,0.15)'/%3E%3C/svg%3E"); z-index: -1; opacity: 0.5; }
 
-    * {
-      scrollbar-width: thin;
-      scrollbar-color: var(--card) var(--bg);
-    }
-    
-    h1,h2,h3,h4{font-weight:700; margin:0 0 .5rem}
-    p{margin:0 0 .8rem; color:var(--muted); font-size:14px;}
-    a{color:var(--text); text-decoration:none; font-weight:700; transition: all 0.3s ease;}
-    .container{width:min(1200px, 90vw); margin-inline:auto}
+        /* Navigation - Standardized across all pages */
+        .nav-wrapper { position: fixed; top: 24px; z-index: 100; width: 100%; display: flex; justify-content: center; padding: 0 20px; }
+        .nav-island { display: flex; align-items: center; background: var(--glass-bg); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); padding: 8px 12px; border-radius: 16px; gap: 20px; max-width: 1100px; width: 100%; }
+        .brand { display: flex; align-items: center; gap: 10px; padding-right: 20px; border-right: 1px solid var(--glass-border); cursor: pointer; }
+        .brand img { width: 32px; height: 32px; border-radius: 8px; }
+        .brand span { font-family: var(--font-display); font-weight: 600; font-size: 16px; }
+        .nav-links { display: flex; gap: 4px; flex-grow: 1; justify-content: center; }
+        .nav-link { font-size: 13px; font-weight: 500; color: var(--text-muted); padding: 8px 14px; border-radius: 10px; }
+        .nav-link:hover, .nav-link.active { color: white; background: rgba(255, 255, 255, 0.08); }
+        .nav-cta { background: #5865F2; color: white; padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .mobile-toggle { display: none; cursor: pointer; color: white; margin-left: auto; }
 
-    /* ... [Previous Animations kept same] ... */
-    .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden; opacity: 0.6; }
-    .particle { position: absolute; background: rgba(200,200,200,0.15); border-radius: 50%; pointer-events: none; }
-    .particle-1 { width: 3px; height: 3px; animation: float-1 20s linear infinite; }
-    .particle-2 { width: 4px; height: 4px; animation: float-2 25s linear infinite; }
-    .particle-3 { width: 2px; height: 2px; animation: float-3 15s linear infinite; }
-    .particle-4 { width: 5px; height: 5px; animation: float-4 30s linear infinite; }
-    @keyframes float-1 { 0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; } 10% { opacity: 0.4; } 90% { opacity: 0.4; } 100% { transform: translateY(-100px) translateX(100px) rotate(360deg); opacity: 0; } }
-    @keyframes float-2 { 0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; } 10% { opacity: 0.3; } 90% { opacity: 0.3; } 100% { transform: translateY(-100px) translateX(-50px) rotate(-360deg); opacity: 0; } }
-    @keyframes float-3 { 0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; } 10% { opacity: 0.5; } 90% { opacity: 0.5; } 100% { transform: translateY(-100px) translateX(200px) rotate(720deg); opacity: 0; } }
-    @keyframes float-4 { 0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; } 10% { opacity: 0.2; } 90% { opacity: 0.2; } 100% { transform: translateY(-100px) translateX(-100px) rotate(-720deg); opacity: 0; } }
-    .wave { position: absolute; width: 200%; height: 200%; background: linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.01) 25%, transparent 50%, rgba(255,255,255,0.01) 75%, transparent 100%); }
-    .wave-1 { top: -50%; left: -50%; animation: wave-motion-1 20s linear infinite; }
-    .wave-2 { top: -50%; right: -50%; animation: wave-motion-2 25s linear infinite reverse; }
-    @keyframes wave-motion-1 { 0% { transform: rotate(0deg) scale(1); } 100% { transform: rotate(360deg) scale(1.1); } }
-    @keyframes wave-motion-2 { 0% { transform: rotate(0deg) scale(1.05); } 100% { transform: rotate(-360deg) scale(0.95); } }
+        .hero { text-align: center; padding: 160px 20px 60px; max-width: 1000px; }
+        .hero h1 { font-family: var(--font-display); font-size: clamp(40px, 5vw, 64px); line-height: 1.1; margin-bottom: 20px; background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.7) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { color: var(--text-muted); font-size: 16px; max-width: 600px; margin: 0 auto 40px; }
 
-    .nav{
-      position:sticky;
-      top:0;
-      z-index:50;
-      backdrop-filter:blur(20px);
-      background: rgba(10,10,10,0.85);
-      border-bottom:1px solid var(--line);
-    }
+        .versions-wrapper { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
+        .version-pill { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05); padding: 12px 24px; border-radius: 50px; border: 1px solid var(--glass-border); }
+        .version-icon { color: var(--text-muted); }
+        .version-data { display: flex; flex-direction: column; text-align: left; }
+        .v-label { font-size: 10px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
+        .v-num { font-family: monospace; font-size: 14px; font-weight: 600; color: var(--primary-purple); }
 
-    .nav .row{
-      display:flex;
-      align-items:center;
-      gap:24px;
-      padding:12px 0;
-      height: 60px;
-    }
+        .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; width: 100%; max-width: 1000px; margin-bottom: 40px; }
+        .stat-card { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 16px; padding: 20px; text-align: center; }
+        .stat-val { font-size: 32px; font-weight: 700; color: white; display: block; font-family: var(--font-display); }
+        .stat-lbl { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:0;
-      font-size:16px;
-      font-weight:700;
-      cursor:pointer;
-      position:relative;
-      overflow:hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+        .platform-switch { display: flex; justify-content: center; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 12px; margin: 0 auto 40px; max-width: fit-content; }
+        .p-btn { background: transparent; border: none; color: var(--text-muted); padding: 10px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: var(--font-body); transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+        .p-btn.active { background: rgba(255,255,255,0.1); color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .p-btn:hover:not(.active) { color: white; }
 
-    .brand-icon { width: 32px; height: 32px; object-fit: contain; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); flex-shrink: 0; }
-    .brand-text { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap; margin-left: 0; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-    .brand:hover .brand-text { max-width: 150px; opacity: 1; margin-left: 12px; }
-    .brand:hover .brand-icon { transform: rotate(360deg) scale(1.1); }
+        .exec-list { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 1000px; padding-bottom: 80px; }
+        .exec-item { background: rgba(15, 10, 20, 0.4); border: 1px solid var(--glass-border); border-radius: 16px; padding: 24px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; cursor: pointer; position: relative; overflow: hidden; }
+        .exec-item:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); }
+        
+        .exec-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--glass-border); }
+        .exec-item.working::before { background: var(--primary-green); box-shadow: 0 0 10px var(--primary-green); }
+        .exec-item.down::before { background: var(--primary-red); box-shadow: 0 0 10px var(--primary-red); }
 
-    .links{ margin-left:auto; display:flex; gap:20px; align-items:center; }
-    .links a{ opacity:.7; transition: all 0.3s ease; padding: 8px 16px; border-radius: 12px; font-size: 13px; }
-    .links a:hover { opacity:1; background: rgba(255,255,255,0.05); transform: translateY(-1px); }
-    .links a.active { opacity: 1; background: rgba(255,255,255,0.08); }
-    .links a.discord-nav { color: #5865F2; opacity: 1; font-weight: 700; margin-left: auto; }
-    .links a.discord-nav:hover { background: rgba(88,101,242,0.15); }
+        .exec-info h3 { font-family: var(--font-display); font-size: 18px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+        .badges { display: flex; gap: 8px; flex-wrap: wrap; }
+        .badge { font-size: 11px; padding: 4px 10px; border-radius: 6px; background: rgba(255,255,255,0.1); font-weight: 600; }
+        .badge.unc { background: rgba(192, 132, 252, 0.15); color: #d8b4fe; border: 1px solid rgba(192, 132, 252, 0.3); }
+        .badge.free { background: rgba(74, 222, 128, 0.15); color: #86efac; border: 1px solid rgba(74, 222, 128, 0.3); }
+        .badge.paid { background: rgba(96, 165, 250, 0.15); color: #93c5fd; border: 1px solid rgba(96, 165, 250, 0.3); }
 
-    .mobile-menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; margin-left: auto; }
-    .mobile-menu-toggle span { width: 24px; height: 2px; background: var(--text); transition: all 0.3s ease; }
-    .mobile-menu { display: none; position: fixed; top: 61px; left: 0; right: 0; background: rgba(10,10,10,0.98); backdrop-filter: blur(20px); border-bottom: 1px solid var(--line); padding: 20px; z-index: 49; animation: slideDown 0.3s ease; }
-    .mobile-menu.active { display: block; }
-    .mobile-menu a { display: block; padding: 14px 20px; margin-bottom: 8px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); transition: all 0.3s ease; text-align: center; }
-    .mobile-menu a:hover { background: rgba(255,255,255,0.08); transform: translateX(4px); }
-    .mobile-menu a.discord-nav { background: #5865F2; border-color: #5865F2; color: #ffffff; }
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .exec-meta { text-align: right; }
+        .status-pill { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+        .status-pill.working { background: var(--primary-green); color: black; }
+        .status-pill.down { background: var(--primary-red); color: black; }
+        .updated-time { font-size: 12px; color: var(--text-muted); display: block; }
 
-    .hero{ position:relative; z-index:20; padding:80px 0 40px; text-align:center; }
-    .title{ font-size: clamp(32px, 6vw, 56px); line-height:1.1; margin:.6rem 0 .8rem; text-align: center; }
-    .subtitle{ font-size: 13px; color:var(--muted); max-width: 600px; margin: 0 auto 32px; }
+        .loader { text-align: center; color: var(--text-muted); padding: 40px; }
 
-    .warning-banner { display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px; border-radius: 16px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.5); margin-bottom: 32px; animation: pulse-warning 2s ease-in-out infinite; }
-    .warning-banner.success { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.5); animation: pulse-success 2s ease-in-out infinite; }
-    .warning-banner svg { width: 20px; height: 20px; flex-shrink: 0; }
-    @keyframes pulse-warning { 0%, 100% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); } 50% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.5); } }
-    @keyframes pulse-success { 0%, 100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); } 50% { box-shadow: 0 0 25px rgba(16, 185, 129, 0.5); } }
+        /* Mobile Responsive Improvements */
+        @media (max-width: 900px) {
+            .nav-links { 
+                display: none; 
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--glass-bg);
+                backdrop-filter: blur(20px);
+                border: 1px solid var(--glass-border);
+                border-radius: 16px;
+                padding: 20px;
+                margin-top: 10px;
+                flex-direction: column;
+                gap: 10px;
+                z-index: 1000;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .mobile-toggle { display: block; }
+            .exec-item { flex-direction: column; align-items: flex-start; gap: 16px; }
+            .exec-meta { text-align: left; width: 100%; }
+            .hero { padding: 140px 20px 40px; }
+            .hero h1 { font-size: 36px; }
+            .versions-wrapper { flex-direction: column; align-items: center; }
+            .version-pill { width: 100%; max-width: 300px; }
+            .status-grid { grid-template-columns: 1fr; }
+            .platform-switch { flex-direction: column; width: 100%; max-width: 300px; }
+            .p-btn { justify-content: center; }
+            .nav-island { flex-wrap: wrap; justify-content: space-between; }
+            .nav-cta { order: 3; width: 100%; margin-top: 10px; justify-content: center; }
+        }
 
-    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 40px; }
-    .stat-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; text-align: center; transition: all 0.3s ease; position: relative; }
-    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: var(--radius); padding: 1px; background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.3s ease; }
-    .stat-card:hover::before { opacity: 1; }
-    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.15); }
-    .stat-number { font-size: 36px; font-weight: 700; margin-bottom: 8px; line-height: 1; }
-    .stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+        @media (max-width: 480px) {
+            .hero { padding: 120px 15px 30px; }
+            .hero h1 { font-size: 32px; }
+            .exec-item { padding: 20px; }
+            .exec-info h3 { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .badges { width: 100%; }
+            .nav-island { padding: 10px; }
+            .brand { padding-right: 15px; }
+            .brand span { font-size: 14px; }
+        }
 
-    /* --- NEW VERSION TRACKER STYLES --- */
-    .version-tracker {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      margin-bottom: 48px;
-      flex-wrap: wrap;
-    }
-
-    .version-card {
-      background: rgba(21, 21, 21, 0.6);
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 20px 32px;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      min-width: 260px;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      cursor: default;
-    }
-
-    .version-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 20px;
-      padding: 1px;
-      background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-    }
-
-    .version-card.windows:hover {
-      border-color: rgba(59, 130, 246, 0.4);
-      box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
-      transform: translateY(-4px);
-    }
-
-    .version-card.mac:hover {
-      border-color: rgba(139, 92, 246, 0.4);
-      box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
-      transform: translateY(-4px);
-    }
-
-    .version-icon-wrapper {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      transition: all 0.3s ease;
-    }
-
-    .version-card:hover .version-icon-wrapper {
-      background: rgba(255, 255, 255, 0.08);
-      transform: scale(1.05);
-    }
-
-    .version-card.windows .version-icon-wrapper { color: var(--blue); }
-    .version-card.mac .version-icon-wrapper { color: var(--purple); }
-
-    .version-info {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 4px;
-    }
-
-    .version-label {
-      font-size: 12px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .live-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 8px var(--green);
-      animation: pulse-dot 2s infinite;
-    }
-
-    @keyframes pulse-dot {
-      0% { opacity: 0.5; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.2); }
-      100% { opacity: 0.5; transform: scale(1); }
-    }
-
-    .version-number {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    }
-
-    .version-date {
-        font-size: 11px;
-        color: var(--muted);
-        opacity: 0.6;
-    }
-
-    /* --- END VERSION TRACKER STYLES --- */
-
-    .platform-toggle { display: flex; justify-content: center; gap: 12px; margin-bottom: 40px; flex-wrap: wrap; }
-    .platform-btn { display: flex; align-items: center; gap: 10px; padding: 12px 24px; border-radius: 16px; background: var(--card); border: 2px solid var(--line); color: var(--text); font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; }
-    .platform-btn svg { width: 20px; height: 20px; }
-    .platform-btn:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
-    .platform-btn.active { background: var(--green); border-color: var(--green); color: #ffffff; }
-
-    section{ position:relative; z-index:20; padding:60px 0; border-top:1px solid var(--line); }
-    section h2 { font-size: clamp(24px, 4vw, 32px); margin-bottom: 32px; display: flex; align-items: center; gap: 12px; }
-    section h2 svg { width: 32px; height: 32px; }
-
-    .executor-list { display: flex; flex-direction: column; gap: 12px; }
-    .executor-item { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--line); border-radius: var(--radius); padding: 20px 24px; transition: all 0.3s ease; cursor: pointer; position: relative; }
-    .executor-item.working { border-left-color: var(--green); }
-    .executor-item.down { border-left-color: var(--red); }
-    .executor-item:hover { transform: translateX(4px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.15); }
-    .executor-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 12px; }
-    .executor-left { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-    .executor-name-link { font-size: 20px; font-weight: 700; color: var(--text); text-decoration: none; transition: all 0.3s ease; }
-    .executor-name-link:hover { color: var(--green); }
-    .executor-badges { display: flex; gap: 8px; flex-wrap: wrap; }
-    .badge { padding: 4px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; white-space: nowrap; }
-    .badge.version { background: rgba(255,255,255,0.08); color: var(--text); }
-    .badge.unc { background: rgba(139, 92, 246, 0.15); color: #A78BFA; border: 1px solid rgba(139, 92, 246, 0.3); }
-    .badge.price { background: rgba(59, 130, 246, 0.15); color: #60A5FA; border: 1px solid rgba(59, 130, 246, 0.3); }
-    .badge.free { background: rgba(16, 185, 129, 0.15); color: var(--green); border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge.keysystem { background: rgba(245, 158, 11, 0.15); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.3); }
-    .badge.unsupported { background: rgba(249, 115, 22, 0.15); color: #FB923C; border: 1px solid rgba(249, 115, 22, 0.3); }
-    .executor-status-badge { padding: 8px 16px; border-radius: 12px; font-size: 13px; font-weight: 700; white-space: nowrap; }
-    .executor-status-badge.updated { background: var(--green); color: #ffffff; }
-    .executor-status-badge.not-updated { background: var(--red); color: #ffffff; }
-    .executor-bottom { color: var(--muted); font-size: 13px; }
-
-    .loading { text-align: center; padding: 40px 20px; }
-    .loader { display: inline-flex; gap: 8px; margin: 24px 0; }
-    .loader-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--muted); animation: loader-bounce 1.4s infinite ease-in-out both; }
-    .loader-dot:nth-child(1) { animation-delay: -0.32s; }
-    .loader-dot:nth-child(2) { animation-delay: -0.16s; }
-    .loader-dot:nth-child(3) { animation-delay: 0s; }
-    @keyframes loader-bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
-
-    footer{ border-top:1px solid var(--line); padding:24px 0 40px; color:var(--muted); text-align:center; font-size: 12px; }
-    .api-credit { margin-bottom: 16px; font-size: 13px; }
-    .api-credit a { color: var(--green); font-weight: 700; }
-    .api-credit a:hover { text-decoration: underline; }
-
-    /* sUNC Modal Styles - Kept same */
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.85); z-index: 1000; backdrop-filter: blur(8px); animation: fadeIn 0.3s ease; }
-    .modal-overlay.active { display: flex; align-items: center; justify-content: center; padding: 20px; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .modal-content { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); width: 100%; max-width: 1000px; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; animation: slideUp 0.3s ease; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 24px; border-bottom: 1px solid var(--line); }
-    .modal-header h3 { font-size: 24px; margin: 0; }
-    .modal-close { width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.05); border: none; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
-    .modal-close:hover { background: rgba(255,255,255,0.1); }
-    .modal-body { padding: 24px; overflow-y: auto; }
-    .sunc-warning { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 16px; margin-bottom: 24px; display: flex; gap: 12px; }
-    .sunc-warning strong { color: #FBBF24; }
-    .sunc-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 24px; }
-    .sunc-stat-box { background: rgba(255,255,255,0.03); border: 1px solid var(--line); border-radius: 12px; padding: 20px; text-align: center; }
-    .sunc-stat-number { font-size: 48px; font-weight: 700; line-height: 1; margin-bottom: 8px; }
-    .sunc-stat-number.green { color: var(--green); }
-    .sunc-stat-number.red { color: var(--red); }
-    .sunc-stat-label { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
-    .sunc-circle { width: 200px; height: 200px; margin: 0 auto 24px; position: relative; }
-    .sunc-circle svg { transform: rotate(-90deg); }
-    .sunc-circle-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 12; }
-    .sunc-circle-progress { fill: none; stroke: var(--green); stroke-width: 12; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
-    .sunc-circle-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
-    .sunc-circle-percentage { font-size: 48px; font-weight: 700; line-height: 1; }
-    .sunc-circle-subtitle { font-size: 13px; color: var(--muted); margin-top: 8px; }
-    .sunc-functions-list { max-height: 400px; overflow-y: auto; background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
-    .sunc-function-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; margin-bottom: 8px; background: rgba(255,255,255,0.03); border-radius: 8px; transition: all 0.3s ease; }
-    .sunc-function-item:hover { background: rgba(255,255,255,0.06); }
-    .sunc-function-name { display: flex; align-items: center; gap: 12px; font-weight: 600; }
-    .sunc-function-status { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-    .sunc-function-status.passed { background: rgba(16, 185, 129, 0.2); color: var(--green); }
-    .sunc-function-status.failed { background: rgba(239, 68, 68, 0.2); color: var(--red); }
-    .sunc-function-category { padding: 4px 12px; background: rgba(255,255,255,0.08); border-radius: 6px; font-size: 12px; }
-
-    @media (max-width: 980px){
-      .stats{grid-template-columns:repeat(2, 1fr)}
-      .links{display:none}
-      .mobile-menu-toggle{display:flex}
-      .hero { padding: 60px 0 40px; }
-      section { padding: 40px 0; }
-    }
-
-    @media (max-width: 768px) {
-      .stats{grid-template-columns:1fr}
-      .version-tracker { gap: 12px; }
-      .version-card { width: 100%; min-width: 0; }
-      .title { font-size: 28px; }
-      .hero { padding: 40px 0 30px; }
-      .subtitle { font-size: 12px; padding: 0 10px; }
-      .stat-number { font-size: 28px; }
-      .platform-toggle { gap: 8px; }
-      .platform-btn { padding: 10px 18px; font-size: 13px; }
-      .executor-top { flex-direction: column; align-items: flex-start; }
-      .executor-badges { width: 100%; }
-    }
-  </style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .animate-spin { animation: spin 1s linear infinite; }
+    </style>
 </head>
 <body>
-  <div class="bg-animation">
-    <div class="particle particle-1" style="left: 10%; animation-delay: 0s;"></div>
-    <div class="particle particle-2" style="left: 20%; animation-delay: 2s;"></div>
-    <div class="particle particle-3" style="left: 30%; animation-delay: 4s;"></div>
-    <div class="particle particle-1" style="left: 40%; animation-delay: 6s;"></div>
-    <div class="particle particle-4" style="left: 50%; animation-delay: 8s;"></div>
-    <div class="particle particle-2" style="left: 60%; animation-delay: 10s;"></div>
-    <div class="particle particle-3" style="left: 70%; animation-delay: 12s;"></div>
-    <div class="particle particle-1" style="left: 80%; animation-delay: 14s;"></div>
-    <div class="particle particle-4" style="left: 90%; animation-delay: 16s;"></div>
-    <div class="wave wave-1"></div>
-    <div class="wave wave-2"></div>
-  </div>
+    <div class="bg-glow"></div>
+    <div class="stars"></div>
 
-  <nav class="nav">
-    <div class="container row">
-      <div class="brand">
-        <img src="https://i.ibb.co/9HfPQdpj/output-onlinepngtools-2.png" alt="Nobulem" class="brand-icon">
-        <span class="brand-text">nobulem.wtf</span>
-      </div>
-
-      <div class="links">
-        <a href="/">Home</a>
-        <a href="/executors" class="active">Executors</a>
-        <a href="/games">Games & Scripts</a>
-        <a href="/showcases">Showcases</a>
-        <a href="/pricing">Pricing</a>
-        <a href="/developers">Developers</a>
-        <a href="/tos">Terms</a>
-        <a href="https://discord.gg/ExH98C3uFH" target="_blank" class="discord-nav">Discord</a>
-      </div>
-
-      <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </div>
-  </nav>
-
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="/">Home</a>
-    <a href="/executors" class="active">Executors</a>
-    <a href="/games">Games & Scripts</a>
-    <a href="/showcases">Showcases</a>
-    <a href="/pricing">Pricing</a>
-    <a href="/developers">Developers</a>
-    <a href="/tos">Terms</a>
-    <a href="https://discord.gg/ExH98C3uFH" target="_blank" class="discord-nav">Discord</a>
-  </div>
-
-  <header class="hero container">
-    <h1 class="title">Executor Status</h1>
-    <p class="subtitle">Live status information for Roblox executors</p>
-
-    <div class="warning-banner" id="warningBanner">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-      <span id="warningText">Checking executor status...</span>
-    </div>
-
-    <div class="stats">
-      <div class="stat-card">
-        <div class="stat-number" id="statsTotal">0</div>
-        <div class="stat-label">Tracked</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="statsWorking">0</div>
-        <div class="stat-label">Working</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="statsDown">0</div>
-        <div class="stat-label">Down</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="statsUNC">-</div>
-        <div class="stat-label">Avg UNC %</div>
-      </div>
-    </div>
-
-    <div class="version-tracker">
-      <div class="version-card windows">
-        <div class="version-icon-wrapper">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
-        </div>
-        <div class="version-info">
-          <div class="version-label">
-            <div class="live-dot"></div>
-            Windows
-          </div>
-          <span class="version-number" id="winVersion">Loading...</span>
-          <span class="version-date" id="winDate"></span>
-        </div>
-      </div>
-
-      <div class="version-card mac">
-        <div class="version-icon-wrapper">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"/></svg>
-        </div>
-        <div class="version-info">
-          <div class="version-label">
-            <div class="live-dot"></div>
-            Mac
-          </div>
-          <span class="version-number" id="macVersion">Loading...</span>
-          <span class="version-date" id="macDate"></span>
-        </div>
-      </div>
-    </div>
-
-  </header>
-
-  <section id="executors">
-    <div class="container">
-      <div class="platform-toggle">
-        <button class="platform-btn active" data-platform="windows" onclick="switchPlatform('windows')">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
-          Windows
-        </button>
-        <button class="platform-btn" data-platform="mac" onclick="switchPlatform('mac')">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-          Mac
-        </button>
-        <button class="platform-btn" data-platform="mobile" onclick="switchPlatform('mobile')">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
-          Mobile
-        </button>
-      </div>
-
-      <h2 id="platformTitle">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
-        Windows Executors
-      </h2>
-
-      <div id="executorGrid">
-        <div class="loading">
-          <div class="loader">
-            <div class="loader-dot"></div>
-            <div class="loader-dot"></div>
-            <div class="loader-dot"></div>
-          </div>
-          <p>Fetching live executor status...</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <div class="container">
-      <div class="api-credit">Powered by <a href="https://weao.xyz" target="_blank">WhatExpsAre.Online API</a></div>
-      <div style="margin-bottom:8px"><strong>nobulem.wtf</strong> – undetected</div>
-      <div>© <span id="year"></span> nobulem.wtf • All rights reserved</div>
-    </div>
-  </footer>
-
-  <div class="modal-overlay" id="suncModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>sUNC Results</h3>
-        <button class="modal-close" onclick="closeSuncModal()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-      <div class="modal-body" id="suncModalBody">
-        <div class="loading">
-          <div class="loader">
-            <div class="loader-dot"></div>
-            <div class="loader-dot"></div>
-            <div class="loader-dot"></div>
-          </div>
-          <p>Loading sUNC data...</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    function toggleMobileMenu() {
-      const menu = document.getElementById('mobileMenu');
-      menu.classList.toggle('active');
-    }
-
-    document.addEventListener('click', function(event) {
-      const menu = document.getElementById('mobileMenu');
-      const toggle = document.querySelector('.mobile-menu-toggle');
-
-      if (menu.classList.contains('active') &&
-          !menu.contains(event.target) &&
-          !toggle.contains(event.target)) {
-        menu.classList.remove('active');
-      }
-    });
-
-    document.querySelectorAll('.mobile-menu a').forEach(link => {
-      link.addEventListener('click', () => {
-        document.getElementById('mobileMenu').classList.remove('active');
-      });
-    });
-
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    const BASE_URLS = [
-        'https://weao.xyz/api',
-        'https://whatexpsare.online/api',
-        'https://weao.gg/api',
-        'https://whatexploitsaretra.sh/api'
-    ];
-    let currentVersion = null;
-    let allExecutors = [];
-    let currentPlatform = 'windows';
-    const ALLOWED_EXECUTORS = ['bunni.lol', 'swift', 'potassium', 'wave', 'volcano', 'valex', 'delta', 'codex', 'cryptic', 'hydrogen', 'macsploit', 'seliware', 'chocosploit'];
-
-    async function tryFetch(url) {
-        for (const baseUrl of BASE_URLS) {
-            try {
-                console.log('Attempting fetch from:', baseUrl + url);
-                const response = await fetch(baseUrl + url, {
-                    headers: {
-                        'User-Agent': 'WEAO-3PService'
-                    }
-                });
-                
-                if (response.ok) {
-                    return response;
-                } else if (response.status === 429) {
-                    console.log('Rate limited, trying next URL...');
-                    continue;
-                }
-            } catch (error) {
-                console.log(`Failed with ${baseUrl}:`, error);
-                continue;
-            }
-        }
-        throw new Error('All fetch attempts failed - possible rate limit or API issue');
-    }
-
-    async function fetchVersions() {
-      try {
-        const response = await tryFetch('/versions/current');
-        const data = await response.json();
-        
-        // Update internal variable
-        currentVersion = data.Windows || data.clientVersionUpload || data.version || 'Unknown';
-
-        // Update UI Elements for Version Tracker
-        const winVerEl = document.getElementById('winVersion');
-        const macVerEl = document.getElementById('macVersion');
-        const winDateEl = document.getElementById('winDate');
-        const macDateEl = document.getElementById('macDate');
-
-        if (winVerEl) {
-          winVerEl.textContent = data.Windows || 'Unknown';
-          if (data.WindowsDate) winDateEl.textContent = getTimeAgo(data.WindowsDate);
-        }
-        
-        if (macVerEl) {
-          macVerEl.textContent = data.Mac || 'Unknown';
-          if (data.MacDate) macDateEl.textContent = getTimeAgo(data.MacDate);
-        }
-
-        return currentVersion;
-      } catch (error) {
-        console.error('Error fetching versions:', error);
-        document.getElementById('winVersion').textContent = 'Error';
-        document.getElementById('macVersion').textContent = 'Error';
-        return 'Unknown';
-      }
-    }
-
-    async function fetchAllExecutors() {
-      try {
-        const response = await tryFetch('/status/exploits');
-        const data = await response.json();
-        return Array.isArray(data) ? data : [];
-      } catch (error) {
-        console.error('Error fetching all executors:', error);
-        return [];
-      }
-    }
-
-    function getTimeAgo(dateString) {
-      if (!dateString || dateString === 'Unknown') return '';
-      
-      try {
-        let date;
-        if (dateString.includes(' at ')) {
-          const [datePart, timePart] = dateString.split(' at ');
-          const [month, day, year] = datePart.split('/');
-          const timeStr = timePart.replace(' UTC', '').trim();
-          date = new Date(`${year}-${month}-${day} ${timeStr} UTC`);
-        } else {
-          date = new Date(dateString);
-        }
-        
-        if (isNaN(date.getTime())) {
-          return dateString;
-        }
-        
-        const now = new Date();
-        const diffMs = now - date;
-        const diffSeconds = Math.floor(diffMs / 1000);
-        const diffMinutes = Math.floor(diffSeconds / 60);
-        const diffHours = Math.floor(diffMinutes / 60);
-        const diffDays = Math.floor(diffHours / 24);
-
-        if (diffSeconds < 60) return 'Updated just now';
-        if (diffMinutes < 60) return `Updated ${diffMinutes}m ago`;
-        if (diffHours < 24) return `Updated ${diffHours}h ago`;
-        return `Updated ${diffDays}d ago`;
-      } catch (e) {
-        return '';
-      }
-    }
-
-    async function fetchExecutorData() {
-      try {
-        // Fetch versions first to update tracker
-        const version = await fetchVersions();
-        const executors = await fetchAllExecutors();
-        
-        allExecutors = executors.filter(ex => 
-          ex && ex.title && ALLOWED_EXECUTORS.includes(ex.title.toLowerCase())
-        );
-
-        updateStats(allExecutors, version);
-        updateWarningBanner(allExecutors);
-        renderExecutors(allExecutors);
-      } catch (error) {
-        console.error('Failed to fetch executor data:', error);
-        document.getElementById('executorGrid').innerHTML = `
-          <div class="loading">
-            <p style="color: #EF4444;">Failed to load executor status. Please try again later.</p>
-          </div>
-        `;
-      }
-    }
-
-    function updateStats(data, version) {
-      const total = data.length;
-      const working = data.filter(e => e.updateStatus === true).length;
-      const down = data.filter(e => e.updateStatus !== true).length;
-      
-      const uncPercentages = data
-        .map(e => e.uncPercentage || 0)
-        .filter(u => u > 0);
-      
-      const avgUnc = uncPercentages.length > 0 
-        ? Math.round(uncPercentages.reduce((a, b) => a + b, 0) / uncPercentages.length) 
-        : 0;
-
-      animateNumber(document.getElementById('statsTotal'), total);
-      animateNumber(document.getElementById('statsWorking'), working);
-      animateNumber(document.getElementById('statsDown'), down);
-      animateNumber(document.getElementById('statsUNC'), avgUnc, '%');
-    }
-
-    function animateNumber(element, target, suffix = '') {
-      let current = 0;
-      const increment = target / 30;
-      const timer = setInterval(() => {
-        current += increment;
-        if (current >= target) {
-          current = target;
-          clearInterval(timer);
-        }
-        element.textContent = Math.floor(current) + suffix;
-      }, 50);
-    }
-
-    function updateWarningBanner(data) {
-      const banner = document.getElementById('warningBanner');
-      const text = document.getElementById('warningText');
-
-      const allDown = data.every(e => e.updateStatus !== true);
-      const workingCount = data.filter(e => e.updateStatus === true).length;
-
-      if (allDown) {
-        text.textContent = 'All executors are currently down';
-        banner.classList.remove('success');
-      } else {
-        text.textContent = `${workingCount} executor${workingCount !== 1 ? 's' : ''} working`;
-        banner.classList.add('success');
-      }
-    }
-
-    function switchPlatform(platform) {
-      currentPlatform = platform;
-      
-      document.querySelectorAll('.platform-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      document.querySelector(`[data-platform="${platform}"]`).classList.add('active');
-      
-      const titleEl = document.getElementById('platformTitle');
-      let icon = '';
-      let title = '';
-      
-      if (platform === 'windows') {
-        icon = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>';
-        title = 'Windows Executors';
-      } else if (platform === 'mac') {
-        icon = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>';
-        title = 'Mac Executors';
-      } else if (platform === 'mobile') {
-        icon = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>';
-        title = 'Mobile Executors';
-      }
-      
-      titleEl.innerHTML = icon + title;
-      
-      renderExecutors(allExecutors);
-    }
-
-    function renderExecutors(executors) {
-      const grid = document.getElementById('executorGrid');
-
-      if (currentPlatform === 'mobile') {
-        const androidExecutors = executors.filter(ex => {
-          const platform = ex.platform ? ex.platform.toLowerCase() : '';
-          const extype = ex.extype ? ex.extype.toLowerCase() : '';
-          return platform === 'android' || extype === 'aexecutor' || extype === 'android';
-        });
-        
-        const iosExecutors = executors.filter(ex => {
-          const platform = ex.platform ? ex.platform.toLowerCase() : '';
-          const extype = ex.extype ? ex.extype.toLowerCase() : '';
-          return platform === 'ios' || extype === 'iexecutor' || extype === 'ios';
-        });
-        
-        let html = '';
-        
-        if (androidExecutors.length > 0) {
-          html += `
-            <h3 style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; margin-top: 0;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85a.637.637 0 0 0-.83.22l-1.88 3.24a11.463 11.463 0 0 0-8.94 0L5.65 5.67a.643.643 0 0 0-.87-.2c-.28.18-.37.54-.22.83L6.4 9.48A10.78 10.78 0 0 0 1 18h22a10.78 10.78 0 0 0-5.4-8.52M7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5m10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5"/></svg>
-              Android
-            </h3>
-            <div class="executor-list" style="margin-bottom: 40px;">
-              ${renderExecutorItems(androidExecutors)}
+    <div class="nav-wrapper">
+        <nav class="nav-island">
+            <div class="brand" onclick="window.location.href='/'">
+                <img src="https://i.ibb.co/9HfPQdpj/output-onlinepngtools-2.png" alt="Logo">
+                <span>nobulem.wtf</span>
             </div>
-          `;
-        }
-        
-        if (iosExecutors.length > 0) {
-          html += `
-            <h3 style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-              iOS
-            </h3>
-            <div class="executor-list">
-              ${renderExecutorItems(iosExecutors)}
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/executors" class="nav-link active">Executors</a>
+                <a href="/games" class="nav-link">Games & Scripts</a>
+                <a href="/showcases" class="nav-link">Showcases</a>
+                <a href="/pricing" class="nav-link">Pricing</a>
+                <a href="/developers" class="nav-link">Developers</a>
+                <a href="/tos" class="nav-link">Terms</a>
             </div>
-          `;
-        }
-        
-        if (androidExecutors.length === 0 && iosExecutors.length === 0) {
-          html = '<div class="loading"><p>No mobile executors found.</p></div>';
-        }
-        
-        grid.innerHTML = html;
-        attachExecutorClickHandlers([...androidExecutors, ...iosExecutors]);
-        
-      } else {
-        let filteredExecutors = executors.filter(ex => {
-          const platform = ex.platform ? ex.platform.toLowerCase() : '';
-          const extype = ex.extype ? ex.extype.toLowerCase() : '';
-          
-          if (currentPlatform === 'windows') {
-            return platform === 'windows' || extype === 'wexecutor' || extype === 'wexternal';
-          }
-          if (currentPlatform === 'mac') {
-            return platform === 'mac' || extype === 'mexecutor';
-          }
-          return true;
-        });
+            <a href="https://discord.gg/ExH98C3uFH" class="nav-cta"><i data-lucide="message-circle" width="16"></i> Discord</a>
+            <div class="mobile-toggle"><i data-lucide="menu"></i></div>
+        </nav>
+    </div>
 
-        if (filteredExecutors.length === 0) {
-          grid.innerHTML = '<div class="loading"><p>No executors found for this platform.</p></div>';
-          return;
-        }
-
-        grid.innerHTML = `<div class="executor-list">${renderExecutorItems(filteredExecutors)}</div>`;
-        attachExecutorClickHandlers(filteredExecutors);
-      }
-    }
-    
-    function renderExecutorItems(executors) {
-      return executors.map((ex) => {
-        const isWorking = ex.updateStatus === true;
-        const statusClass = isWorking ? 'working' : 'down';
-        let statusText = isWorking ? 'Updated' : 'Not Updated';
-        let statusBadgeClass = isWorking ? 'updated' : 'not-updated';
+    <div class="hero">
+        <h1>Executor Status</h1>
+        <p class="subtitle">Live tracking of Roblox executors. Data powered by WEAO API.</p>
         
-        // Reuse existing getTimeAgo logic but format specifically for list item
-        let timeAgo = '';
-        if (ex.updatedDate) {
-            try {
-                 // Simple parse since we just want the string in the box
-                 let d = new Date(ex.updatedDate);
-                 if(isNaN(d.getTime()) && ex.updatedDate.includes(' at ')) {
-                     const parts = ex.updatedDate.split(' at ');
-                     d = new Date(parts[0]);
-                 }
-                 // Recalculate simple ago
-                 const diff = (new Date() - d) / 1000;
-                 if(diff < 3600) timeAgo = 'Just now';
-                 else if(diff < 86400) timeAgo = Math.floor(diff/3600) + 'h ago';
-                 else timeAgo = Math.floor(diff/86400) + 'd ago';
-            } catch(e) { timeAgo = 'Unknown'; }
-        }
-
-        const exploitLink = ex.websitelink || ex.purchaselink || '#';
-        
-        let badges = [];
-        if (ex.version) badges.push(`<span class="badge version">${ex.version}</span>`);
-        if (ex.uncStatus && ex.sunc) {
-          const suncKey = ex.sunc.suncKey || '';
-          const suncScrap = ex.sunc.suncScrap || '';
-          badges.push(`<span class="badge unc" onclick="event.stopPropagation(); event.preventDefault(); showSuncModal('${ex.title.replace(/'/g, "\\'")}', '${suncKey}', '${suncScrap}'); return false;" style="cursor: pointer;">sUNC</span>`);
-        }
-        if (ex.title.toLowerCase() === 'volcano') badges.push(`<span class="badge unsupported">Not Fully Supported</span>`);
-        if (ex.free === true) {
-          badges.push(`<span class="badge free">Free${ex.keysystem ? ' (Key System)' : ''}</span>`);
-        } else if (ex.cost) {
-          badges.push(`<span class="badge price">${ex.cost}</span>`);
-        }
-
-        return `
-          <div class="executor-item ${statusClass}">
-            <div class="executor-top">
-              <div class="executor-left">
-                <a href="${exploitLink}" target="_blank" rel="noopener noreferrer" class="executor-name-link">
-                  ${ex.title || 'Unknown'}
-                </a>
-                <div class="executor-badges">
-                  ${badges.join('')}
+        <div class="versions-wrapper">
+            <div class="version-pill">
+                <i data-lucide="monitor" class="version-icon"></i>
+                <div class="version-data">
+                    <span class="v-label">Windows Ver</span>
+                    <span class="v-num" id="winVersion">Loading...</span>
                 </div>
-              </div>
-              <div class="executor-status-badge ${statusBadgeClass}">
-                ${statusText}
-              </div>
             </div>
-            <div class="executor-bottom">
-              Last updated: ${timeAgo || 'Unknown'}
+            <div class="version-pill">
+                <i data-lucide="laptop" class="version-icon"></i>
+                <div class="version-data">
+                    <span class="v-label">Mac Ver</span>
+                    <span class="v-num" id="macVersion">Loading...</span>
+                </div>
             </div>
-          </div>
-        `;
-      }).join('');
-    }
-    
-    function attachExecutorClickHandlers(executors) {
-      document.querySelectorAll('.executor-item').forEach((item, index) => {
-        const executor = executors[index];
-        if (!executor) return;
-        const link = executor.websitelink || executor.purchaselink || '#';
-        item.addEventListener('click', function(e) {
-          if (e.target.closest('.badge') || e.target.closest('.executor-name-link')) return;
-          window.open(link, '_blank');
-        });
-      });
-    }
-
-    function createParticle() {
-      const particle = document.createElement('div');
-      particle.className = `particle particle-${Math.floor(Math.random() * 4) + 1}`;
-      particle.style.left = Math.random() * 100 + '%';
-      particle.style.animationDelay = '0s';
-      const bgAnimation = document.querySelector('.bg-animation');
-      if (bgAnimation) {
-        bgAnimation.appendChild(particle);
-        setTimeout(() => { if (particle.parentNode) particle.parentNode.removeChild(particle); }, 35000);
-      }
-    }
-
-    setInterval(createParticle, 3000);
-    fetchExecutorData();
-    setInterval(fetchExecutorData, 30000);
-
-    // sUNC Modal Functions (Same as before)
-    function showSuncModal(executorName, suncKey, suncScrap) {
-      const modal = document.getElementById('suncModal');
-      const modalBody = document.getElementById('suncModalBody');
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      modalBody.innerHTML = `
-        <div class="loading">
-          <div class="loader"><div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div></div>
-          <p>Loading sUNC data...</p>
         </div>
-      `;
-      fetchSuncData(executorName, suncKey, suncScrap);
-    }
 
-    function closeSuncModal() {
-      const modal = document.getElementById('suncModal');
-      modal.classList.remove('active');
-      document.body.style.overflow = '';
-    }
+        <div class="status-grid">
+            <div class="stat-card">
+                <span class="stat-val" id="statsTotal">-</span>
+                <span class="stat-lbl">Tracked</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-val" id="statsWorking" style="color: var(--primary-green)">-</span>
+                <span class="stat-lbl">Working</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-val" id="statsUNC" style="color: var(--primary-purple)">-</span>
+                <span class="stat-lbl">Avg UNC</span>
+            </div>
+        </div>
 
-    document.getElementById('suncModal').addEventListener('click', function(e) { if (e.target === this) closeSuncModal(); });
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeSuncModal(); });
+        <div class="platform-switch">
+            <button class="p-btn active" onclick="switchPlatform('windows')" data-platform="windows"><i data-lucide="monitor"></i> Windows</button>
+            <button class="p-btn" onclick="switchPlatform('mac')" data-platform="mac"><i data-lucide="apple"></i> Mac</button>
+            <button class="p-btn" onclick="switchPlatform('mobile')" data-platform="mobile"><i data-lucide="smartphone"></i> Mobile</button>
+        </div>
 
-    async function fetchSuncData(executorName, suncKey, suncScrap) {
-      try {
-        let data = null;
-        let version = 'v2.1.0';
-        try {
-          const numelonResponse = await fetch(`https://sunc.numelon.com/api/v1/results/${suncKey}/${suncScrap}`);
-          if (numelonResponse.ok) data = await numelonResponse.json();
-        } catch (e) {}
+        <div class="exec-list" id="executorGrid">
+            <div class="loader"><i data-lucide="loader-2" class="animate-spin"></i> Fetching API Data...</div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
         
-        if (!data) {
-          try {
-            for (const baseUrl of BASE_URLS) {
-              try {
-                const weaoResponse = await fetch(`${baseUrl}/sunc/${suncKey}/${suncScrap}`);
-                if (weaoResponse.ok) { data = await weaoResponse.json(); break; }
-              } catch (e) { continue; }
-            }
-          } catch (e) {}
-        }
+        // Mobile menu toggle
+        const mobileToggle = document.querySelector('.mobile-toggle');
+        const navLinks = document.querySelector('.nav-links');
         
-        if (!data) {
-          const executor = allExecutors.find(ex => ex.title.toLowerCase() === executorName.toLowerCase());
-          if (executor && executor.suncPercentage !== undefined) {
-            data = { version: 'v2.1.0', results: [] };
-          }
-        }
+        mobileToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileToggle.innerHTML = navLinks.classList.contains('active') 
+                ? '<i data-lucide="x"></i>' 
+                : '<i data-lucide="menu"></i>';
+            lucide.createIcons();
+        });
         
-        if (!data) throw new Error('Could not fetch sUNC data');
-        
-        const modalBody = document.getElementById('suncModalBody');
-        if (data.results && data.results.length > 0) {
-          const passed = data.results.filter(r => r.state === 'passed').length;
-          const failed = data.results.filter(r => r.state === 'failed').length;
-          const total = data.results.length;
-          const percentage = Math.round((passed / total) * 100);
-          const circumference = 2 * Math.PI * 90;
-          const offset = circumference - (percentage / 100) * circumference;
-          
-          const functionsByCategory = {};
-          data.results.forEach(func => {
-            if (!functionsByCategory[func.category]) functionsByCategory[func.category] = [];
-            functionsByCategory[func.category].push(func);
-          });
-          
-          let functionsHTML = '';
-          Object.keys(functionsByCategory).sort().forEach(category => {
-            functionsByCategory[category].forEach(func => {
-              const statusIcon = func.state === 'passed' 
-                ? '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
-                : '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
-              functionsHTML += `<div class="sunc-function-item"><div class="sunc-function-name"><div class="sunc-function-status ${func.state}">${statusIcon}</div>${func.function}</div><div class="sunc-function-category">${func.category}</div></div>`;
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileToggle.innerHTML = '<i data-lucide="menu"></i>';
+                lucide.createIcons();
             });
-          });
-          
-          modalBody.innerHTML = `
-            <div class="sunc-warning"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div><strong>Important:</strong> Failed tests don't always mean functions won't work.</div></div>
-            <div style="display: flex; gap: 24px; margin-bottom: 24px; flex-wrap: wrap;"><div style="flex: 1; min-width: 200px;"><div class="sunc-circle"><svg width="200" height="200" viewBox="0 0 200 200"><circle class="sunc-circle-bg" cx="100" cy="100" r="90"/><circle class="sunc-circle-progress" cx="100" cy="100" r="90" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}"/></svg><div class="sunc-circle-text"><div class="sunc-circle-percentage">${percentage}%</div><div class="sunc-circle-subtitle">${passed}/${total}</div></div></div><h4 style="text-align: center; margin-bottom: 8px;">${executorName}</h4><p style="text-align: center; color: var(--muted); font-size: 13px;">sUNC ${data.version}</p></div><div style="flex: 1; min-width: 300px;"><div class="sunc-stats-grid"><div class="sunc-stat-box"><div class="sunc-stat-number green">${passed}</div><div class="sunc-stat-label">Passed</div></div><div class="sunc-stat-box"><div class="sunc-stat-number red">${failed}</div><div class="sunc-stat-label">Failed</div></div></div></div></div><h4 style="margin-bottom: 16px;">Functions</h4><div class="sunc-functions-list">${functionsHTML}</div><div style="margin-top: 16px; text-align: center; padding-top: 16px; border-top: 1px solid var(--line);"><p style="font-size: 12px; color: var(--muted);">Powered by <a href="https://sunc.numelon.com" target="_blank" style="color: var(--green);">Numelon</a></p></div>`;
-        } else {
-          const executor = allExecutors.find(ex => ex.title.toLowerCase() === executorName.toLowerCase());
-          const percentage = executor ? (executor.suncPercentage || 0) : 0;
-          const circumference = 2 * Math.PI * 90;
-          const offset = circumference - (percentage / 100) * circumference;
-          modalBody.innerHTML = `<div class="sunc-warning"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div><strong>Note:</strong> Detailed sUNC results not available. Showing percentage only.</div></div><div style="display: flex; justify-content: center; margin: 40px 0;"><div><div class="sunc-circle"><svg width="200" height="200" viewBox="0 0 200 200"><circle class="sunc-circle-bg" cx="100" cy="100" r="90"/><circle class="sunc-circle-progress" cx="100" cy="100" r="90" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}"/></svg><div class="sunc-circle-text"><div class="sunc-circle-percentage">${percentage}%</div><div class="sunc-circle-subtitle">sUNC Score</div></div></div><h4 style="text-align: center; margin-top: 16px; margin-bottom: 8px;">${executorName}</h4><p style="text-align: center; color: var(--muted); font-size: 13px;">sUNC ${version}</p></div></div>`;
+        });
+        
+        // Using dedicated WEAO proxy
+        const PROXY_BASE = 'http://farts.fadedis.xyz:25551/api';
+        
+        let allExecutors = [];
+        let currentPlatform = 'windows';
+        
+        const ALLOWED_EXECUTORS = [
+            'bunni.lol', 'swift', 'potassium', 'wave', 'volcano', 'valex', 
+            'delta', 'codex', 'cryptic', 'hydrogen', 'macsploit', 'seliware', 
+            'chocosploit'
+        ];
+
+        async function fetchData() {
+            try {
+                // Fetch Roblox versions
+                console.log('Fetching versions from:', PROXY_BASE + '/versions/current');
+                const versionResponse = await fetch(PROXY_BASE + '/versions/current');
+                
+                if (!versionResponse.ok) {
+                    throw new Error(`Version fetch failed: ${versionResponse.status}`);
+                }
+                
+                const versions = await versionResponse.json();
+                console.log('Versions loaded:', versions);
+                
+                document.getElementById('winVersion').textContent = versions.Windows || 'N/A';
+                document.getElementById('macVersion').textContent = versions.Mac || 'N/A';
+
+                // Fetch executor data
+                console.log('Fetching exploits from:', PROXY_BASE + '/status/exploits');
+                const exploitResponse = await fetch(PROXY_BASE + '/status/exploits');
+                
+                if (!exploitResponse.ok) {
+                    throw new Error(`Exploit fetch failed: ${exploitResponse.status}`);
+                }
+                
+                const exploits = await exploitResponse.json();
+                console.log('Exploits loaded:', exploits.length);
+                
+                if (!Array.isArray(exploits)) {
+                    throw new Error('Invalid API response format');
+                }
+                
+                // Filter for allowed executors
+                allExecutors = exploits.filter(ex => 
+                    ex && ex.title && ALLOWED_EXECUTORS.includes(ex.title.toLowerCase())
+                );
+                
+                console.log(`Filtered ${allExecutors.length} allowed executors`);
+                
+                updateStats(allExecutors);
+                renderExecutors();
+                
+            } catch (error) {
+                console.error('API Error:', error);
+                document.getElementById('executorGrid').innerHTML = `
+                    <div style="padding:40px; text-align:center; color:#f87171; background: rgba(248, 113, 113, 0.1); border-radius: 12px; border: 1px solid rgba(248, 113, 113, 0.3);">
+                        <i data-lucide="alert-circle" style="width: 48px; height: 48px; margin-bottom: 16px;"></i>
+                        <h3 style="margin-bottom: 8px;">Failed to Load Data</h3>
+                        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 12px;">
+                            Unable to fetch from WEAO API. Please try again later.
+                        </p>
+                        <button onclick="fetchData()" style="padding: 10px 20px; background: #5865F2; border: none; border-radius: 8px; color: white; cursor: pointer; font-weight: 600;">
+                            Retry
+                        </button>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
         }
-      } catch (error) {
-        document.getElementById('suncModalBody').innerHTML = `<div class="loading"><p style="color: #EF4444;">Failed to load sUNC data.</p></div>`;
-      }
-    }
-  </script>
+
+        function updateStats(data) {
+            document.getElementById('statsTotal').textContent = data.length;
+            
+            const working = data.filter(e => e.updateStatus === true).length;
+            document.getElementById('statsWorking').textContent = working;
+            
+            // Calculate average UNC
+            const uncValues = data
+                .map(e => e.uncPercentage || 0)
+                .filter(u => u > 0);
+            
+            const avgUNC = uncValues.length 
+                ? Math.round(uncValues.reduce((a, b) => a + b, 0) / uncValues.length)
+                : 0;
+            
+            document.getElementById('statsUNC').textContent = avgUNC + '%';
+        }
+
+        function switchPlatform(platform) {
+            currentPlatform = platform;
+            document.querySelectorAll('.p-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[data-platform="${platform}"]`).classList.add('active');
+            renderExecutors();
+            lucide.createIcons();
+        }
+
+        function renderExecutors() {
+            const grid = document.getElementById('executorGrid');
+            
+            // Filter executors by platform
+            const filtered = allExecutors.filter(ex => {
+                const platform = (ex.platform || '').toLowerCase();
+                const extype = (ex.extype || '').toLowerCase();
+                
+                if (currentPlatform === 'windows') {
+                    return platform === 'windows' || extype.includes('wex');
+                }
+                if (currentPlatform === 'mac') {
+                    return platform === 'mac' || extype.includes('mex');
+                }
+                if (currentPlatform === 'mobile') {
+                    return platform.includes('android') || platform.includes('ios') || 
+                           extype.includes('android') || extype.includes('ios');
+                }
+                return false;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div style="padding:40px; text-align:center; color:var(--text-muted); background: rgba(255,255,255,0.03); border-radius: 12px;">
+                        <i data-lucide="search-x" style="width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                        <p>No executors found for ${currentPlatform}.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            grid.innerHTML = filtered.map(ex => {
+                const isWorking = ex.updateStatus === true;
+                const statusClass = isWorking ? 'working' : 'down';
+                const statusText = isWorking ? 'UPDATED' : 'DOWN';
+                
+                const badges = [];
+                
+                // UNC badges
+                if (ex.uncStatus && ex.uncPercentage) {
+                    badges.push(`<span class="badge unc">UNC ${ex.uncPercentage}%</span>`);
+                }
+                if (ex.suncPercentage) {
+                    badges.push(`<span class="badge unc">sUNC ${ex.suncPercentage}%</span>`);
+                }
+                
+                // Free/Paid badges
+                if (ex.free) {
+                    const keyText = ex.keysystem ? ' (Key)' : '';
+                    badges.push(`<span class="badge free">Free${keyText}</span>`);
+                } else {
+                    badges.push(`<span class="badge paid">${ex.cost || 'Paid'}</span>`);
+                }
+
+                const link = ex.websitelink || ex.discordlink || '#';
+                const dateStr = ex.updatedDate || 'Unknown';
+
+                return `
+                    <div class="exec-item ${statusClass}" onclick="window.open('${link}', '_blank')">
+                        <div class="exec-info">
+                            <h3>
+                                ${ex.title}
+                                <div class="badges">${badges.join('')}</div>
+                            </h3>
+                            <p style="font-size:13px; color:var(--text-muted)">Version: ${ex.version || 'Unknown'}</p>
+                        </div>
+                        <div class="exec-meta">
+                            <span class="status-pill ${statusClass}">${statusText}</span>
+                            <span class="updated-time">${dateStr}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            lucide.createIcons();
+        }
+
+        // Initial load
+        fetchData();
+        
+        // Refresh every 60 seconds
+        setInterval(fetchData, 60000);
+    </script>
 </body>
 </html>
