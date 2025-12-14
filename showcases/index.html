@@ -1,1033 +1,399 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nobulem.wtf – Showcases</title>
-  <meta name="description" content="Nobulem.wtf – Showcases by the Community!">
-  <link rel="icon" type="image/png" href="https://i.ibb.co/NdNpCJ4v/image-2.png">
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <style>
-    :root{
-      --bg: #0a0a0a;
-      --bg-2: #111111;
-      --card: #151515;
-      --text: #e0e0e0;
-      --muted: #999999;
-      --line: #222222;
-      --accent: #d0d0d0;
-      --shadow: 0 8px 32px rgba(0,0,0,.4);
-      --radius: 24px;
-      --speed: 400ms;
-    }
-    *{box-sizing:border-box; margin:0; padding:0;}
-    html,body{height:100%}
-    html{scroll-behavior:smooth}
-    body{
-      background: var(--bg);
-      color:var(--text);
-      font: 600 14px/1.5 ui-sans-serif, -apple-system, system-ui, Segoe UI, Roboto, Helvetica, Arial;
-      letter-spacing:0.3px;
-      overflow-x:hidden;
-    }
-    h1,h2,h3,h4{font-weight:700; margin:0 0 .5rem}
-    p{margin:0 0 .8rem; color:var(--muted); font-size:14px;}
-    a{color:var(--text); text-decoration:none; font-weight:700; transition: all 0.3s ease;}
-    .container{width:min(1100px, 90vw); margin-inline:auto}
-
-    /* Background Animation */
-    .bg-animation {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      overflow: hidden;
-      opacity: 0.6;
-    }
-
-    .particle {
-      position: absolute;
-      background: rgba(200,200,200,0.15);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    .particle-1 {
-      width: 3px;
-      height: 3px;
-      animation: float-1 20s linear infinite;
-    }
-
-    .particle-2 {
-      width: 4px;
-      height: 4px;
-      animation: float-2 25s linear infinite;
-    }
-
-    .particle-3 {
-      width: 2px;
-      height: 2px;
-      animation: float-3 15s linear infinite;
-    }
-
-    .particle-4 {
-      width: 5px;
-      height: 5px;
-      animation: float-4 30s linear infinite;
-    }
-
-    @keyframes float-1 {
-      0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
-      10% { opacity: 0.4; }
-      90% { opacity: 0.4; }
-      100% { transform: translateY(-100px) translateX(100px) rotate(360deg); opacity: 0; }
-    }
-
-    @keyframes float-2 {
-      0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
-      10% { opacity: 0.3; }
-      90% { opacity: 0.3; }
-      100% { transform: translateY(-100px) translateX(-50px) rotate(-360deg); opacity: 0; }
-    }
-
-    @keyframes float-3 {
-      0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
-      10% { opacity: 0.5; }
-      90% { opacity: 0.5; }
-      100% { transform: translateY(-100px) translateX(200px) rotate(720deg); opacity: 0; }
-    }
-
-    @keyframes float-4 {
-      0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
-      10% { opacity: 0.2; }
-      90% { opacity: 0.2; }
-      100% { transform: translateY(-100px) translateX(-100px) rotate(-720deg); opacity: 0; }
-    }
-
-    .wave {
-      position: absolute;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(45deg, 
-        transparent 0%, 
-        rgba(255,255,255,0.01) 25%, 
-        transparent 50%, 
-        rgba(255,255,255,0.01) 75%, 
-        transparent 100%);
-    }
-
-    .wave-1 {
-      top: -50%;
-      left: -50%;
-      animation: wave-motion-1 20s linear infinite;
-    }
-
-    .wave-2 {
-      top: -50%;
-      right: -50%;
-      animation: wave-motion-2 25s linear infinite reverse;
-    }
-
-    @keyframes wave-motion-1 {
-      0% { transform: rotate(0deg) scale(1); }
-      100% { transform: rotate(360deg) scale(1.1); }
-    }
-
-    @keyframes wave-motion-2 {
-      0% { transform: rotate(0deg) scale(1.05); }
-      100% { transform: rotate(-360deg) scale(0.95); }
-    }
-
-    /* Navigation */
-    .nav{
-      position:sticky; 
-      top:0; 
-      z-index:50;
-      backdrop-filter:blur(20px);
-      background: rgba(10,10,10,0.85);
-      border-bottom:1px solid var(--line);
-    }
-    
-    .nav .row{
-      display:flex; 
-      align-items:center; 
-      gap:24px; 
-      padding:12px 0;
-      height: 60px;
-    }
-    
-    .brand{
-      display:flex; 
-      align-items:center; 
-      gap:0; 
-      font-size:16px;
-      font-weight:700;
-      cursor:pointer;
-      position:relative;
-      overflow:hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .brand-icon {
-      width: 32px;
-      height: 32px;
-      object-fit: contain;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      flex-shrink: 0;
-    }
-    
-    .brand-text {
-      max-width: 0;
-      opacity: 0;
-      overflow: hidden;
-      white-space: nowrap;
-      margin-left: 0;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .brand:hover .brand-text {
-      max-width: 150px;
-      opacity: 1;
-      margin-left: 12px;
-    }
-    
-    .brand:hover .brand-icon {
-      transform: rotate(360deg) scale(1.1);
-    }
-    
-    .links{
-      margin-left:auto; 
-      display:flex; 
-      gap:20px; 
-      align-items:center;
-    }
-    
-    .links a{
-      opacity:.7; 
-      transition: all 0.3s ease;
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-size: 13px;
-    }
-    
-    .links a:hover {
-      opacity:1; 
-      background: rgba(255,255,255,0.05);
-      transform: translateY(-1px);
-    }
-    
-    .links a[style*="opacity: 1"] {
-      opacity: 1;
-      background: rgba(255,255,255,0.08);
-    }
-
-    .links a.discord-nav {
-      color: #5865F2 !important;
-      opacity: 1;
-      font-weight: 700;
-      margin-left: auto;
-    }
-
-    .links a.discord-nav:hover {
-      background: rgba(88,101,242,0.15);
-    }
-
-    /* Mobile Menu */
-    .mobile-menu-toggle {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      padding: 8px;
-      margin-left: auto;
-    }
-
-    .mobile-menu-toggle span {
-      width: 24px;
-      height: 2px;
-      background: var(--text);
-      transition: all 0.3s ease;
-    }
-
-    .mobile-menu {
-      display: none;
-      position: fixed;
-      top: 61px;
-      left: 0;
-      right: 0;
-      background: rgba(10,10,10,0.98);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--line);
-      padding: 20px;
-      z-index: 49;
-      animation: slideDown 0.3s ease;
-    }
-
-    .mobile-menu.active {
-      display: block;
-    }
-
-    .mobile-menu a {
-      display: block;
-      padding: 14px 20px;
-      margin-bottom: 8px;
-      border-radius: 12px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      transition: all 0.3s ease;
-      text-align: center;
-    }
-
-    .mobile-menu a:hover {
-      background: rgba(255,255,255,0.08);
-      transform: translateX(4px);
-    }
-
-    .mobile-menu a.discord-nav {
-      background: #5865F2;
-      border-color: #5865F2;
-      color: #ffffff;
-    }
-
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Hero */
-    .hero{
-      position:relative; 
-      z-index:20; 
-      padding:60px 0 40px; 
-      text-align:center;
-    }
-    
-    .eyebrow{
-      color: var(--muted); 
-      text-transform:uppercase; 
-      font-size:11px; 
-      letter-spacing:.2em;
-      margin-bottom:16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .eyebrow-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .eyebrow-item i {
-      width: 14px;
-      height: 14px;
-    }
-    
-    .title{
-      font-size: clamp(32px, 6vw, 56px); 
-      line-height:1.1; 
-      margin:.6rem 0 .8rem;
-    }
-    
-    .subtitle{
-      font-size: 13px; 
-      color:var(--muted);
-      max-width: 600px;
-      margin: 0 auto 32px;
-    }
-
-    /* Sort Section */
-    .sort-section {
-      position: relative;
-      z-index: 20;
-      padding: 20px 0 30px;
-    }
-
-    .sort-controls {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-
-    .sort-btn {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 12px 24px;
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .sort-btn i {
-      width: 16px;
-      height: 16px;
-    }
-
-    .sort-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-      transition: left 0.6s ease;
-    }
-
-    .sort-btn:hover::before {
-      left: 100%;
-    }
-
-    .sort-btn:hover {
-      transform: translateY(-2px);
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.3);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-    }
-
-    /* Videos Section */
-    .videos-section {
-      position: relative;
-      z-index: 20;
-      padding: 0 0 60px;
-    }
-
-    .videos-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 24px;
-      margin-top: 20px;
-    }
-
-    .video-card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      transition: all 0.3s ease;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .video-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: var(--radius);
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .video-card:hover::before {
-      opacity: 1;
-    }
-
-    .video-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-      border-color: rgba(255,255,255,0.2);
-    }
-
-    .video-thumbnail-container {
-      position: relative;
-      overflow: hidden;
-      height: 180px;
-      background: #000;
-    }
-
-    .video-thumbnail {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.4s ease;
-    }
-
-    .video-card:hover .video-thumbnail {
-      transform: scale(1.08);
-    }
-
-    .play-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: all 0.3s ease;
-    }
-
-    .video-card:hover .play-overlay {
-      opacity: 1;
-    }
-
-    .play-button {
-      width: 64px;
-      height: 64px;
-      background: rgba(255,255,255,0.95);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-    }
-
-    .play-button i {
-      width: 28px;
-      height: 28px;
-      color: #000;
-      margin-left: 3px;
-    }
-
-    .video-card:hover .play-button {
-      transform: scale(1.15);
-      background: #fff;
-    }
-
-    .video-duration {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      background: rgba(0,0,0,0.85);
-      color: #fff;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .video-content {
-      padding: 20px;
-    }
-
-    .video-title {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 10px;
-      line-height: 1.3;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .video-description {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-      margin-bottom: 16px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .video-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 12px;
-      border-top: 1px solid var(--line);
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .video-date {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .video-date i {
-      width: 12px;
-      height: 12px;
-    }
-
-    .video-views {
-      font-weight: 600;
-    }
-
-    .video-channel {
-      font-size: 11px;
-      color: var(--muted);
-      opacity: 0.7;
-      margin-top: 8px;
-    }
-
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      padding: 80px 20px;
-    }
-    
-    .empty-icon {
-      width: 80px;
-      height: 80px;
-      margin: 0 auto 24px;
-      background: rgba(255,255,255,0.05);
-      border: 2px dashed var(--line);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .empty-icon i {
-      width: 36px;
-      height: 36px;
-      color: var(--muted);
-    }
-    
-    .empty-title {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-    
-    .empty-subtitle {
-      color: var(--muted);
-      font-size: 15px;
-      margin-bottom: 24px;
-    }
-
-    .loader {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin: 24px 0;
-    }
-    
-    .loader-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--muted);
-      animation: loader-bounce 1.4s infinite ease-in-out both;
-    }
-    
-    .loader-dot:nth-child(1) { animation-delay: -0.32s; }
-    .loader-dot:nth-child(2) { animation-delay: -0.16s; }
-    .loader-dot:nth-child(3) { animation-delay: 0s; }
-
-    @keyframes loader-bounce {
-      0%, 80%, 100% { transform: scale(0); }
-      40% { transform: scale(1); }
-    }
-
-    /* Footer */
-    footer{
-      border-top:1px solid var(--line); 
-      padding:24px 0 40px; 
-      color:var(--muted); 
-      text-align:center;
-      font-size: 12px;
-      position: relative;
-      z-index: 20;
-    }
-
-    /* Responsive */
-    @media (max-width: 980px){
-      .links{display:none}
-      .mobile-menu-toggle{display:flex}
-      .videos-grid{grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));}
-    }
-
-    @media (max-width: 768px) {
-      .hero {
-        padding: 50px 0 30px;
-      }
-      
-      .title {
-        font-size: 28px;
-      }
-
-      .videos-grid{grid-template-columns: 1fr;}
-      
-      .video-card {
-        margin: 0;
-      }
-
-      .sort-btn {
-        padding: 10px 20px;
-        font-size: 13px;
-      }
-
-      .eyebrow {
-        gap: 12px;
-      }
-    }
-  </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nobulem – Showcases</title>
+    <meta name="description" content="Nobulem.wtf – View impressive community showcases of our scripts and executors.">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/NdNpCJ4v/image-2.png">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-color: #040205;
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --primary-purple: #c084fc;
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(13, 13, 13, 0.6);
+            --font-display: 'Poppins', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+            --card-hover: rgba(255, 255, 255, 0.05);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--bg-color); color: var(--text-main); font-family: var(--font-body); overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+        a { text-decoration: none; color: var(--primary-purple); transition: 0.3s; }
+        a:hover { color: #d8b4fe; }
+
+        /* Backgrounds */
+        .bg-glow { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100vw; height: 100vh; background: radial-gradient(circle at 70% 80%, rgba(168, 85, 247, 0.1), transparent 50%); z-index: -2; pointer-events: none; }
+        .stars { position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='1' fill='rgba(255,255,255,0.15)'/%3E%3C/svg%3E"); z-index: -1; opacity: 0.5; }
+
+        /* Navigation - Standardized */
+        .nav-wrapper { position: fixed; top: 24px; z-index: 100; width: 100%; display: flex; justify-content: center; padding: 0 20px; }
+        .nav-island { display: flex; align-items: center; background: var(--glass-bg); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); padding: 8px 12px; border-radius: 16px; gap: 20px; max-width: 1100px; width: 100%; }
+        .brand { display: flex; align-items: center; gap: 10px; padding-right: 20px; border-right: 1px solid var(--glass-border); cursor: pointer; }
+        .brand img { width: 32px; height: 32px; border-radius: 8px; }
+        .brand span { font-family: var(--font-display); font-weight: 600; font-size: 16px; }
+        .nav-links { display: flex; gap: 4px; flex-grow: 1; justify-content: center; }
+        .nav-link { font-size: 13px; font-weight: 500; color: var(--text-muted); padding: 8px 14px; border-radius: 10px; }
+        .nav-link:hover, .nav-link.active { color: white; background: rgba(255, 255, 255, 0.08); }
+        .nav-cta { background: #5865F2; color: white; padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .mobile-toggle { display: none; cursor: pointer; color: white; margin-left: auto; }
+
+        /* Main Content */
+        .container { max-width: 1100px; width: 100%; padding: 160px 20px 80px; }
+        .hero { text-align: center; margin-bottom: 40px; }
+        .hero h1 { font-family: var(--font-display); font-size: clamp(36px, 5vw, 56px); line-height: 1.1; margin-bottom: 12px; }
+        .hero p { color: var(--text-muted); font-size: 14px; max-width: 600px; margin: 0 auto; font-size: clamp(13px, 2vw, 14px); }
+        
+        /* Showcases Grid */
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding-top: 20px;
+        }
+
+        .showcase-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            text-align: left;
+            display: block;
+        }
+
+        .showcase-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(192, 132, 252, 0.15);
+        }
+
+        .showcase-thumbnail {
+            width: 100%;
+            height: 200px;
+            background-color: #1a1a1a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .showcase-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .showcase-card:hover .showcase-thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+            transition: background 0.3s;
+        }
+        
+        .showcase-card:hover .play-icon {
+             background: var(--primary-purple);
+        }
+
+        .play-icon i {
+            color: white;
+            width: 30px;
+            height: 30px;
+            transform: translateX(2px);
+        }
+
+        .showcase-info {
+            padding: 20px;
+            min-height: 120px;
+        }
+
+        .showcase-info h3 {
+            font-family: var(--font-display);
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--text-main);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            line-height: 1.4;
+        }
+
+        .showcase-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .showcase-details span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .showcase-details span i {
+            width: 14px;
+            height: 14px;
+            vertical-align: middle;
+        }
+
+        .loading-text {
+            color: var(--primary-purple);
+            font-size: 14px;
+            text-align: center;
+            padding: 40px;
+        }
+
+        /* Footer */
+        .footer { width: 100%; max-width: 1100px; padding: 40px 20px; border-top: 1px solid var(--glass-border); text-align: center; margin-top: auto; }
+        .footer p { font-size: 12px; color: var(--text-muted); }
+
+        /* Mobile Responsive */
+        @media (max-width: 900px) {
+            .nav-links { 
+                display: none; 
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--glass-bg);
+                backdrop-filter: blur(20px);
+                border: 1px solid var(--glass-border);
+                border-radius: 16px;
+                padding: 20px;
+                margin-top: 10px;
+                flex-direction: column;
+                gap: 10px;
+                z-index: 1000;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .mobile-toggle { display: block; }
+            .nav-island { 
+                justify-content: space-between; 
+                flex-wrap: wrap;
+                padding: 12px 20px;
+            }
+            .brand { border: none; }
+            .nav-cta { 
+                width: 100%; 
+                justify-content: center; 
+                margin-top: 10px; 
+                order: 3; 
+            }
+            .container { padding: 140px 20px 60px; }
+            .hero h1 { font-size: 36px; }
+            .showcase-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+            .showcase-thumbnail { height: 180px; }
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 120px 15px 40px; }
+            .hero h1 { font-size: 32px; }
+            .hero p { font-size: 13px; padding: 0 10px; }
+            .showcase-grid { grid-template-columns: 1fr; }
+            .showcase-thumbnail { height: 160px; }
+            .showcase-info { padding: 15px; min-height: 110px; }
+            .showcase-info h3 { font-size: 16px; }
+            .showcase-details { font-size: 12px; }
+            .play-icon { width: 50px; height: 50px; }
+            .play-icon i { width: 25px; height: 25px; }
+            .nav-island { padding: 10px; }
+            .brand span { font-size: 14px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero { margin-bottom: 30px; }
+            .hero h1 { font-size: 28px; }
+            .showcase-thumbnail { height: 150px; }
+            .showcase-card { border-radius: 12px; }
+            .footer { padding: 30px 15px; }
+        }
+    </style>
 </head>
 <body>
-  <!-- Animated Background -->
-  <div class="bg-animation">
-    <div class="particle particle-1" style="left: 10%; animation-delay: 0s;"></div>
-    <div class="particle particle-2" style="left: 20%; animation-delay: 2s;"></div>
-    <div class="particle particle-3" style="left: 30%; animation-delay: 4s;"></div>
-    <div class="particle particle-1" style="left: 40%; animation-delay: 6s;"></div>
-    <div class="particle particle-4" style="left: 50%; animation-delay: 8s;"></div>
-    <div class="particle particle-2" style="left: 60%; animation-delay: 10s;"></div>
-    <div class="particle particle-3" style="left: 70%; animation-delay: 12s;"></div>
-    <div class="particle particle-1" style="left: 80%; animation-delay: 14s;"></div>
-    <div class="particle particle-4" style="left: 90%; animation-delay: 16s;"></div>
-    <div class="wave wave-1"></div>
-    <div class="wave wave-2"></div>
-  </div>
+    <div class="bg-glow"></div>
+    <div class="stars"></div>
 
-  <nav class="nav">
-    <div class="container row">
-      <div class="brand">
-        <img src="https://i.ibb.co/9HfPQdpj/output-onlinepngtools-2.png" alt="Nobulem" class="brand-icon">
-        <span class="brand-text">nobulem.wtf</span>
-      </div>
-
-      <div class="links">
-        <a href="/">Home</a>
-        <a href="/executors">Executors</a>
-        <a href="/games">Games & Scripts</a>
-        <a href="/showcases" style="opacity: 1;">Showcases</a>
-        <a href="/pricing">Pricing</a>
-        <a href="/developers">Developers</a>
-        <a href="/tos">Terms</a>
-        <a href="https://discord.gg/ExH98C3uFH" target="_blank" class="discord-nav">Discord</a>
-      </div>
-
-      <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
+    <div class="nav-wrapper">
+        <nav class="nav-island">
+            <div class="brand" onclick="window.location.href='/'">
+                <img src="https://i.ibb.co/9HfPQdpj/output-onlinepngtools-2.png" alt="Logo">
+                <span>nobulem.wtf</span>
+            </div>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/executors" class="nav-link">Executors</a>
+                <a href="/games" class="nav-link">Games & Scripts</a>
+                <a href="/showcases" class="nav-link active">Showcases</a> 
+                <a href="/pricing" class="nav-link">Pricing</a>
+                <a href="/developers" class="nav-link">Developers</a>
+                <a href="/tos" class="nav-link">Terms</a>
+            </div>
+            <a href="https://discord.gg/ExH98C3uFH" class="nav-cta"><i data-lucide="message-circle" width="16"></i> Discord</a>
+            <div class="mobile-toggle"><i data-lucide="menu"></i></div>
+        </nav>
     </div>
-  </nav>
 
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="/">Home</a>
-    <a href="/executors">Executors</a>
-    <a href="/games">Games & Scripts</a>
-    <a href="/showcases">Showcases</a>
-    <a href="/pricing">Pricing</a>
-    <a href="/developers">Developers</a>
-    <a href="/tos">Terms</a>
-    <a href="https://discord.gg/ExH98C3uFH" target="_blank" class="discord-nav">Discord</a>
-  </div>
-
-  <header class="hero container">
-    <div class="eyebrow">
-      <span class="eyebrow-item">
-        <i data-lucide="video"></i>
-        video showcases
-      </span>
-      <span class="eyebrow-item">
-        <i data-lucide="play-circle"></i>
-        live gameplay
-      </span>
-      <span class="eyebrow-item">
-        <i data-lucide="book-open"></i>
-        tutorials
-      </span>
-    </div>
-    <h1 class="title">Showcases</h1>
-    <p class="subtitle">Community showcases of our scripts, demonstrations, and tutorials</p>
-  </header>
-
-  <section class="sort-section">
     <div class="container">
-      <div class="sort-controls">
-        <button class="sort-btn" id="sortBtn" onclick="toggleSort()">
-          <i data-lucide="calendar"></i>
-          <span id="sortText">Sort by: Newest First</span>
-        </button>
-      </div>
+        <header class="hero">
+            <h1>Community Showcases</h1>
+            <p>Watch powerful demonstrations of our scripts and executors in action, proudly captured and shared by our users.</p>
+        </header>
+
+        <section class="showcase-grid" id="showcasesGrid">
+            <p class="loading-text">Loading video showcases from YouTube...</p>
+        </section>
+
+        <div class="empty-state" style="display: none;"></div>
     </div>
-  </section>
 
-  <section class="videos-section">
-    <div class="container">
-      <!-- Empty State (shown when no videos) -->
-      <div class="empty-state" id="emptyState" style="display: none;">
-        <div class="empty-icon">
-          <i data-lucide="video-off"></i>
-        </div>
-        <h3 class="empty-title">No Videos Yet</h3>
-        <p class="empty-subtitle">Check back soon for awesome script showcases!</p>
-        <div class="loader">
-          <div class="loader-dot"></div>
-          <div class="loader-dot"></div>
-          <div class="loader-dot"></div>
-        </div>
-      </div>
-      
-      <div class="videos-grid" id="videosGrid">
-        <div class="video-card" data-date="2025-10-18" onclick="openVideo('https://www.youtube.com/watch?v=vn7IsmPlnEU')">
-          <div class="video-thumbnail-container">
-            <img src="https://i.ytimg.com/vi/vn7IsmPlnEU/hqdefault.jpg" alt="Hypershot Script" class="video-thumbnail">
-            <div class="play-overlay">
-              <div class="play-button">
-                <i data-lucide="play"></i>
-              </div>
-            </div>
-            <div class="video-duration">2:38</div>
-          </div>
-          <div class="video-content">
-            <h3 class="video-title">Hypershot Script *NO KEY* | Silent Aim | Aimbot | Fly | ESP & More | Mobile & PC | *KILL ALL*</h3>
-            <p class="video-description">Showcases the Silent Aim, Fov, Esp, Features in our Nobulem Hypershot Script, Get it at Games&Scripts</p>
-            <div class="video-meta">
-              <div class="video-date">
-                <i data-lucide="calendar"></i>
-                <span>Oct 16, 2025</span>
-              </div>
-              <div class="video-views">343 views</div>
-            </div>
-            <div class="video-channel">WRLD Scripts</div>
-          </div>
-        </div>
+    <footer class="footer">
+        <p>&copy; <span id="year">2025</span> Nobulem.wtf. All rights reserved. | <a href="/tos">Terms of Service</a></p>
+    </footer>
 
-        <div class="video-card" data-date="2025-10-18" onclick="openVideo('https://www.youtube.com/watch?v=9WePJIO872k')">
-          <div class="video-thumbnail-container">
-            <img src="https://i.ytimg.com/vi/9WePJIO872k/hqdefault.jpg" alt="HYPERSHOT SCRIPT" class="video-thumbnail">
-            <div class="play-overlay">
-              <div class="play-button">
-                <i data-lucide="play"></i>
-              </div>
-            </div>
-            <div class="video-duration">3:53</div>
-          </div>
-          <div class="video-content">
-            <h3 class="video-title">HYPERSHOT SCRIPT | Silent Aimbot, Kill All, Gun Mods, Hitbox, ESP, OP, No Key | 2025 Roblox</h3>
-            <p class="video-description">Showcases the Silent aim, Flight, ESP Features in our Nobulem Hypershot Script, Get it at Games&Scripts</p>
-            <div class="video-meta">
-              <div class="video-date">
-                <i data-lucide="calendar"></i>
-                <span>Oct 17, 2025</span>
-              </div>
-              <div class="video-views">327 views</div>
-            </div>
-            <div class="video-channel">YokaiScripts</div>
-          </div>
-        </div>
+    <script>
+        lucide.createIcons();
+        document.getElementById('year').textContent = new Date().getFullYear();
 
-        <div class="video-card" data-date="2025-10-15" onclick="openVideo('https://www.youtube.com/watch?v=GkDl6Qap9kI')">
-          <div class="video-thumbnail-container">
-            <img src="https://i.ytimg.com/vi/GkDl6Qap9kI/hqdefault.jpg" alt="Realm Rampage Script" class="video-thumbnail">
-            <div class="play-overlay">
-              <div class="play-button">
-                <i data-lucide="play"></i>
-              </div>
-            </div>
-            <div class="video-duration">2:11</div>
-          </div>
-          <div class="video-content">
-            <h3 class="video-title">💥Realm Rampage Script Pastebin **NO KEY** TP-KILL AUTOFARM NEAREST PLAYERS | AIMBOT SKILLS OP UPDATE</h3>
-            <p class="video-description">Showcases Nobulem's Realm Rampage Kill Aura Script, Get it at Games&Scripts !</p>
-            <div class="video-meta">
-              <div class="video-date">
-                <i data-lucide="calendar"></i>
-                <span>Oct 1, 2025</span>
-              </div>
-              <div class="video-views">426 views</div>
-            </div>
-            <div class="video-channel">PenguinPlays</div>
-          </div>
-        </div>
-
-        <div class="video-card" data-date="2025-10-15" onclick="openVideo('https://www.youtube.com/watch?v=IVY69RI8anw')">
-          <div class="video-thumbnail-container">
-            <img src="https://i.ytimg.com/vi/IVY69RI8anw/hqdefault.jpg" alt="Realm Rampage Script" class="video-thumbnail">
-            <div class="play-overlay">
-              <div class="play-button">
-                <i data-lucide="play"></i>
-              </div>
-            </div>
-            <div class="video-duration">1:02</div>
-          </div>
-          <div class="video-content">
-            <h3 class="video-title">Realm Rampage Script | Kill All, No M1 Cooldown, Fling All, MORE | Roblox Script/Hack</h3>
-            <p class="video-description">Showcases our Realm Rampage Script</p>
-            <div class="video-meta">
-              <div class="video-date">
-                <i data-lucide="calendar"></i>
-                <span>Sep 30, 2025</span>
-              </div>
-              <div class="video-views">93 views</div>
-            </div>
-            <div class="video-channel">LITE</div>
-          </div>
-        </div>
-
-        <div class="video-card" data-date="2025-09-29" onclick="openVideo('https://www.youtube.com/watch?v=DwOMXDo8aBw')">
-          <div class="video-thumbnail-container">
-            <img src="https://i.ytimg.com/vi/DwOMXDo8aBw/hqdefault.jpg" alt="Best realm rampage script" class="video-thumbnail">
-            <div class="play-overlay">
-              <div class="play-button">
-                <i data-lucide="play"></i>
-              </div>
-            </div>
-            <div class="video-duration">2:31</div>
-          </div>
-          <div class="video-content">
-            <h3 class="video-title">Best realm rampage script by far(script in the link description)</h3>
-            <p class="video-description">Showcases Our Auto Farm Kills in Realm Rampage, Get it at Games&Scripts</p>
-            <div class="video-meta">
-              <div class="video-date">
-                <i data-lucide="calendar"></i>
-                <span>Sep 29, 2025</span>
-              </div>
-              <div class="video-views">855 views</div>
-            </div>
-            <div class="video-channel">YokaiScripts</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <div class="container">
-      <div style="margin-bottom:8px"><strong>nobulem.wtf</strong> – script showcases</div>
-      <div>© <span id="year"></span> nobulem.wtf • All rights reserved</div>
-    </div>
-  </footer>
-
-  <script>
-    // Initialize Lucide icons
-    lucide.createIcons();
-
-    // Mobile menu toggle
-    function toggleMobileMenu() {
-      const menu = document.getElementById('mobileMenu');
-      menu.classList.toggle('active');
-    }
-
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', function(event) {
-      const menu = document.getElementById('mobileMenu');
-      const toggle = document.querySelector('.mobile-menu-toggle');
-      
-      if (menu.classList.contains('active') && 
-          !menu.contains(event.target) && 
-          !toggle.contains(event.target)) {
-        menu.classList.remove('active');
-      }
-    });
-
-    // Close mobile menu on link click
-    document.querySelectorAll('.mobile-menu a').forEach(link => {
-      link.addEventListener('click', () => {
-        document.getElementById('mobileMenu').classList.remove('active');
-      });
-    });
-
-    // Set current year
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Sort functionality
-    let sortNewest = true;
-
-    function toggleSort() {
-      sortNewest = !sortNewest;
-      const sortText = document.getElementById('sortText');
-      
-      sortText.textContent = sortNewest ? 'Sort by: Newest First' : 'Sort by: Oldest First';
-      
-      // Sort videos
-      const videosGrid = document.getElementById('videosGrid');
-      const videoCards = Array.from(videosGrid.querySelectorAll('.video-card'));
-      
-      videoCards.sort((a, b) => {
-        const dateA = new Date(a.getAttribute('data-date'));
-        const dateB = new Date(b.getAttribute('data-date'));
-        return sortNewest ? dateB - dateA : dateA - dateB;
-      });
-      
-      // Clear and re-append sorted cards
-      videosGrid.innerHTML = '';
-      videoCards.forEach(card => {
-        videosGrid.appendChild(card);
-      });
-      
-      // Re-initialize icons
-      lucide.createIcons();
-    }
-
-    // Open video in new tab
-    function openVideo(url) {
-      window.open(url, '_blank');
-    }
-
-    // Check if there are videos and show/hide empty state
-    function checkEmptyState() {
-      const videosGrid = document.getElementById('videosGrid');
-      const emptyState = document.getElementById('emptyState');
-      const videoCards = videosGrid.querySelectorAll('.video-card');
-      
-      if (videoCards.length === 0) {
-        videosGrid.style.display = 'none';
-        emptyState.style.display = 'block';
-      } else {
-        videosGrid.style.display = 'grid';
-        emptyState.style.display = 'none';
-      }
-    }
-
-    // Add particle regeneration
-    function createParticle() {
-      const particle = document.createElement('div');
-      particle.className = `particle particle-${Math.floor(Math.random() * 4) + 1}`;
-      particle.style.left = Math.random() * 100 + '%';
-      particle.style.animationDelay = '0s';
-      
-      const bgAnimation = document.querySelector('.bg-animation');
-      if (bgAnimation) {
-        bgAnimation.appendChild(particle);
+        // Mobile menu toggle
+        const mobileToggle = document.querySelector('.mobile-toggle');
+        const navLinks = document.querySelector('.nav-links');
         
-        setTimeout(() => {
-          if (particle.parentNode) {
-            particle.parentNode.removeChild(particle);
-          }
-        }, 35000);
-      }
-    }
+        mobileToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileToggle.innerHTML = navLinks.classList.contains('active') 
+                ? '<i data-lucide="x"></i>' 
+                : '<i data-lucide="menu"></i>';
+            lucide.createIcons();
+        });
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileToggle.innerHTML = '<i data-lucide="menu"></i>';
+                lucide.createIcons();
+            });
+        });
 
-    // Create new particles periodically
-    setInterval(createParticle, 3000);
+        // 1. **REQUIRED: Replace this placeholder key with your actual YouTube API Key**
+        const API_KEY = 'AIzaSyBOBuu2osKGLKcQSTTorHEOatJe9acF42M';
+        
+        // 2. **LIST OF YOUTUBE VIDEO IDs**
+        const VIDEO_IDS = [
+            'DwOMXDo8aBw',
+            'IVY69RI8anw',
+            '9WePJIO872k',
+            'GkDl6Qap9kI',
+            'vn7IsmPlnEU',
+            'kihn_Pqshes',
+            'Tg4PTqLBXjY',
+            'mEO2wbQUqdw',
+            '_eBW8Yiz1KA',
+            '_Day1XwZVno',
+            '8fq_OhlfdNM',
+            'GDVfcYueOlQ',
+            'OGmdc71sqv8'
+        ];
 
-    // Initialize empty state check
-    window.addEventListener('DOMContentLoaded', () => {
-      checkEmptyState();
-      lucide.createIcons();
-    });
-  </script>
+        const GRID_CONTAINER = document.getElementById('showcasesGrid');
+        
+        // Helper function to format large numbers
+        function formatCount(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+            }
+            if (num >= 1000) {
+                return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+            }
+            return num;
+        }
+
+        // Helper function to render a single video card
+        function renderVideoCard(video) {
+            const videoUrl = `https://www.youtube.com/watch?v=${video.id}`;
+            const thumbnailSrc = video.snippet.thumbnails.medium ? video.snippet.thumbnails.medium.url : video.snippet.thumbnails.default.url;
+            const title = video.snippet.title;
+            const channelTitle = video.snippet.channelTitle;
+            const viewCount = formatCount(video.statistics ? video.statistics.viewCount : 0);
+
+            const cardHTML = `
+                <a href="${videoUrl}" target="_blank" class="showcase-card">
+                    <div class="showcase-thumbnail">
+                        <img src="${thumbnailSrc}" alt="${title} Thumbnail" loading="lazy">
+                        <div class="play-icon"><i data-lucide="play"></i></div>
+                    </div>
+                    <div class="showcase-info">
+                        <h3>${title}</h3>
+                        <div class="showcase-details">
+                            <span><i data-lucide="user"></i> ${channelTitle}</span>
+                            <span><i data-lucide="eye"></i> ${viewCount} views</span>
+                        </div>
+                    </div>
+                </a>
+            `;
+            GRID_CONTAINER.innerHTML += cardHTML;
+        }
+
+        // Main function to fetch all video data
+        async function fetchVideos() {
+            if (API_KEY === 'YOUR_YOUTUBE_API_KEY') {
+                GRID_CONTAINER.innerHTML = '<p style="grid-column: 1/-1; color: #f87171; font-weight: 700;">ERROR: Please replace "YOUR_YOUTUBE_API_KEY" in the script with a valid key to load videos.</p>';
+                lucide.createIcons();
+                return;
+            }
+
+            // Join video IDs for a single bulk request
+            const ids = VIDEO_IDS.join(',');
+            const endpoint = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${ids}&key=${API_KEY}`;
+
+            try {
+                const response = await fetch(endpoint);
+                const data = await response.json();
+
+                // Clear the loading text
+                GRID_CONTAINER.innerHTML = ''; 
+
+                if (data.items && data.items.length > 0) {
+                    data.items.forEach(renderVideoCard);
+                    lucide.createIcons();
+                } else {
+                    GRID_CONTAINER.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No video showcases found or invalid video IDs. Check your configuration.</p>';
+                }
+            } catch (error) {
+                console.error("Failed to fetch YouTube videos:", error);
+                GRID_CONTAINER.innerHTML = '<p style="grid-column: 1/-1; color: #f87171; text-align: center; padding: 40px;">Failed to load showcases due to API error. Check your network or API key settings.</p>';
+            }
+        }
+
+        // Start the process when the page loads
+        document.addEventListener('DOMContentLoaded', fetchVideos);
+    </script>
 </body>
 </html>
