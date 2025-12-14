@@ -1,1271 +1,849 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>nobulem.wtf — Free Scripts Hub</title>
-  <meta name="description" content="nobulem.wtf — Quality scripts hub. Bold. Fast. Clean.">
-  <link rel="icon" type="image/png" href="https://i.ibb.co/NdNpCJ4v/image-2.png">
-  <style>
-    /* ---------- Base / Theme ---------- */
-    :root{
-      --bg: #0a0a0a;
-      --bg-2: #111111;
-      --card: #151515;
-      --text: #e0e0e0;
-      --muted: #999999;
-      --line: #222222;
-      --accent: #d0d0d0;
-      --shadow: 0 8px 32px rgba(0,0,0,.4);
-      --radius: 24px;
-      --speed: 400ms;
-    }
-    *{box-sizing:border-box; margin:0; padding:0;}
-    html,body{height:100%}
-    html{scroll-behavior:smooth}
-    body{
-      background: var(--bg);
-      color:var(--text);
-      font: 600 14px/1.5 ui-sans-serif, -apple-system, system-ui, Segoe UI, Roboto, Helvetica, Arial;
-      letter-spacing:0.3px;
-      overflow-x:hidden;
-    }
-    h1,h2,h3,h4{font-weight:700; margin:0 0 .5rem}
-    p{margin:0 0 .8rem; color:var(--muted); font-size:14px;}
-    a{color:var(--text); text-decoration:none; font-weight:700; transition: all 0.3s ease;}
-    .container{width:min(1100px, 90vw); margin-inline:auto}
-
-    /* ---------- Animated Background ---------- */
-    .bg-animation {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      overflow: hidden;
-      opacity: 0.6;
-    }
-
-    .particle {
-      position: absolute;
-      background: rgba(200,200,200,0.15);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    .particle-1 {
-      width: 3px;
-      height: 3px;
-      animation: float-1 20s linear infinite;
-    }
-
-    .particle-2 {
-      width: 4px;
-      height: 4px;
-      animation: float-2 25s linear infinite;
-    }
-
-    .particle-3 {
-      width: 2px;
-      height: 2px;
-      animation: float-3 15s linear infinite;
-    }
-
-    .particle-4 {
-      width: 5px;
-      height: 5px;
-      animation: float-4 30s linear infinite;
-    }
-
-    @keyframes float-1 {
-      0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
-      10% { opacity: 0.4; }
-      90% { opacity: 0.4; }
-      100% { transform: translateY(-100px) translateX(100px) rotate(360deg); opacity: 0; }
-    }
-
-    @keyframes float-2 {
-      0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
-      10% { opacity: 0.3; }
-      90% { opacity: 0.3; }
-      100% { transform: translateY(-100px) translateX(-50px) rotate(-360deg); opacity: 0; }
-    }
-
-    @keyframes float-3 {
-      0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
-      10% { opacity: 0.5; }
-      90% { opacity: 0.5; }
-      100% { transform: translateY(-100px) translateX(200px) rotate(720deg); opacity: 0; }
-    }
-
-    @keyframes float-4 {
-      0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
-      10% { opacity: 0.2; }
-      90% { opacity: 0.2; }
-      100% { transform: translateY(-100px) translateX(-100px) rotate(-720deg); opacity: 0; }
-    }
-
-    .wave {
-      position: absolute;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(45deg, 
-        transparent 0%, 
-        rgba(255,255,255,0.01) 25%, 
-        transparent 50%, 
-        rgba(255,255,255,0.01) 75%, 
-        transparent 100%);
-    }
-
-    .wave-1 {
-      top: -50%;
-      left: -50%;
-      animation: wave-motion-1 20s linear infinite;
-    }
-
-    .wave-2 {
-      top: -50%;
-      right: -50%;
-      animation: wave-motion-2 25s linear infinite reverse;
-    }
-
-    @keyframes wave-motion-1 {
-      0% { transform: rotate(0deg) scale(1); }
-      100% { transform: rotate(360deg) scale(1.1); }
-    }
-
-    @keyframes wave-motion-2 {
-      0% { transform: rotate(0deg) scale(1.05); }
-      100% { transform: rotate(-360deg) scale(0.95); }
-    }
-
-    /* ---------- Navigation ---------- */
-    .nav{
-      position:sticky; 
-      top:0; 
-      z-index:50;
-      backdrop-filter:blur(20px);
-      background: rgba(10,10,10,0.85);
-      border-bottom:1px solid var(--line);
-    }
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nobulem.wtf — Undetected Quality</title>
+    <meta name="description" content="nobulem.wtf — Quality scripts hub. Bold. Fast. Clean.">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/NdNpCJ4v/image-2.png">
     
-    .nav .row{
-      display:flex; 
-      align-items:center; 
-      gap:24px; 
-      padding:12px 0;
-      height: 60px;
-    }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    .brand{
-      display:flex; 
-      align-items:center; 
-      gap:0; 
-      font-size:16px;
-      font-weight:700;
-      cursor:pointer;
-      position:relative;
-      overflow:hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .brand-icon {
-      width: 32px;
-      height: 32px;
-      object-fit: contain;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      flex-shrink: 0;
-    }
-    
-    .brand-text {
-      max-width: 0;
-      opacity: 0;
-      overflow: hidden;
-      white-space: nowrap;
-      margin-left: 0;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .brand:hover .brand-text {
-      max-width: 150px;
-      opacity: 1;
-      margin-left: 12px;
-    }
-    
-    .brand:hover .brand-icon {
-      transform: rotate(360deg) scale(1.1);
-    }
-    
-    .links{
-      margin-left:auto; 
-      display:flex; 
-      gap:20px; 
-      align-items:center;
-    }
-    
-    .links a{
-      opacity:.7; 
-      transition: all 0.3s ease;
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-size: 13px;
-    }
-    
-    .links a:hover {
-      opacity:1; 
-      background: rgba(255,255,255,0.05);
-      transform: translateY(-1px);
-    }
-    
-    .links a[style*="color: #fff"],
-    .links a[style*="opacity: 1"] {
-      opacity: 1;
-      background: rgba(255,255,255,0.08);
-    }
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-    .links a.discord-nav {
-      color: #5865F2 !important;
-      opacity: 1;
-      font-weight: 700;
-      margin-left: auto;
-    }
+    <style>
+        :root {
+            --bg-color: #040205;
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --primary-purple: #c084fc;
+            --primary-blue: #0055fe;
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(10, 5, 15, 0.6);
+            --glow-gradient: radial-gradient(circle at center, rgba(168, 85, 247, 0.4) 0%, rgba(4, 2, 5, 0) 70%);
+            --font-display: 'Poppins', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
 
-    .links a.discord-nav:hover {
-      background: rgba(88,101,242,0.15);
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    /* Mobile Menu */
-    .mobile-menu-toggle {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      padding: 8px;
-      margin-left: auto;
-    }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    .mobile-menu-toggle span {
-      width: 24px;
-      height: 2px;
-      background: var(--text);
-      transition: all 0.3s ease;
-    }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
 
-    .mobile-menu {
-      display: none;
-      position: fixed;
-      top: 61px;
-      left: 0;
-      right: 0;
-      background: rgba(10,10,10,0.98);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--line);
-      padding: 20px;
-      z-index: 49;
-      animation: slideDown 0.3s ease;
-    }
+        /* --- Background Effects --- */
+        .bg-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vw;
+            height: 100vh;
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(76, 29, 149, 0.15), transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(192, 132, 252, 0.1), transparent 40%);
+            z-index: -2;
+            pointer-events: none;
+        }
 
-    .mobile-menu.active {
-      display: block;
-    }
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='1' fill='rgba(255,255,255,0.15)'/%3E%3Ccircle cx='50' cy='80' r='0.8' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='150' cy='40' r='1.2' fill='rgba(255,255,255,0.15)'/%3E%3Ccircle cx='120' cy='150' r='0.8' fill='rgba(255,255,255,0.1)'/%3E%3C/svg%3E");
+            z-index: -1;
+            opacity: 0.7;
+            mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
+        }
 
-    .mobile-menu a {
-      display: block;
-      padding: 14px 20px;
-      margin-bottom: 8px;
-      border-radius: 12px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      transition: all 0.3s ease;
-      text-align: center;
-    }
+        /* --- Navigation (Standardized like Executors page) --- */
+        .nav-wrapper {
+            position: fixed;
+            top: 24px;
+            z-index: 100;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+        }
 
-    .mobile-menu a:hover {
-      background: rgba(255,255,255,0.08);
-      transform: translateX(4px);
-    }
+        .nav-island {
+            display: flex;
+            align-items: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            padding: 8px 12px;
+            border-radius: 16px;
+            gap: 20px;
+            max-width: 1100px;
+            width: 100%;
+        }
 
-    .mobile-menu a.discord-nav {
-      background: #5865F2;
-      border-color: #5865F2;
-      color: #ffffff;
-    }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-right: 20px;
+            border-right: 1px solid var(--glass-border);
+            cursor: pointer;
+        }
 
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+        .brand img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
 
-    /* ---------- Hero ---------- */
-    .hero{
-      position:relative; 
-      z-index:20; 
-      padding:80px 0 60px; 
-      text-align:center;
-    }
-    
-    .eyebrow{
-      color: var(--muted); 
-      text-transform:uppercase; 
-      font-size:11px; 
-      letter-spacing:.2em;
-      margin-bottom:16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
+        .brand span {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 16px;
+        }
 
-    .eyebrow-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+        .nav-links {
+            display: flex;
+            gap: 4px;
+            flex-grow: 1;
+            justify-content: center;
+        }
 
-    .eyebrow-item svg {
-      width: 14px;
-      height: 14px;
-      stroke: var(--muted);
-    }
-    
-    .title{
-      font-size: clamp(32px, 6vw, 56px); 
-      line-height:1.1; 
-      margin:.6rem 0 .8rem;
-      text-align: center;
-    }
-    
-    .typing-text {
-      display: inline-block;
-      border-right: 2px solid var(--text);
-      animation: blink-caret 0.75s step-end infinite;
-    }
-    
-    @keyframes blink-caret {
-      from, to { border-color: transparent }
-      50% { border-color: var(--text) }
-    }
-    
-    .subtitle{
-      font-size: 13px; 
-      color:var(--muted);
-      max-width: 600px;
-      margin: 0 auto 32px;
-    }
-    
-    .actions{
-      display:flex; 
-      gap:12px; 
-      justify-content:center; 
-      flex-wrap:wrap;
-    }
-    
-    .btn{
-      display:inline-flex; 
-      align-items:center; 
-      justify-content:center; 
-      gap:10px;
-      padding:12px 24px; 
-      border-radius:16px; 
-      border:1px solid var(--line); 
-      cursor:pointer; 
-      transition:all 0.3s ease;
-      font-size:13px;
-      font-weight:700;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .btn::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.1);
-      transform: translate(-50%, -50%);
-      transition: width 0.5s ease, height 0.5s ease;
-    }
-    
-    .btn:hover::before {
-      width: 300px;
-      height: 300px;
-    }
-    
-    .btn.primary{
-      background: var(--text);
-      color: var(--bg);
-      border-color: var(--text);
-    }
-    
-    .btn.ghost{
-      background:transparent;
-    }
+        .nav-link {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            padding: 8px 14px;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
 
-    .btn.discord{
-      background: #5865F2;
-      color: #ffffff;
-      border-color: #5865F2;
-    }
+        .nav-link:hover, .nav-link.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.08);
+        }
 
-    .btn.discord:hover{
-      background: #4752C4;
-      border-color: #4752C4;
-    }
-    
-    .btn:hover{
-      transform:translateY(-2px);
-      box-shadow: 0 8px 24px rgba(255,255,255,0.1);
-    }
+        .nav-cta {
+            background: #5865F2;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-    /* ---------- Sections ---------- */
-    section{
-      position:relative; 
-      z-index:20; 
-      padding:60px 0; 
-      border-top:1px solid var(--line);
-    }
-    
-    section h2 {
-      font-size: clamp(24px, 4vw, 32px);
-      margin-bottom: 8px;
-    }
-    
-    section > .container > p {
-      margin-bottom: 32px;
-    }
-    
-    .grid{
-      display:grid; 
-      gap:16px;
-    }
-    
-    .cards{
-      grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
-    }
-    
-    .card{
-      background: var(--card); 
-      border: 1px solid var(--line);
-      border-radius:var(--radius); 
-      padding:24px; 
-      transition: all 0.3s ease;
-      position: relative;
-    }
-    
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: var(--radius);
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    .card:hover::before {
-      opacity: 1;
-    }
-    
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 32px rgba(0,0,0,0.3);
-      border-color: rgba(255,255,255,0.15);
-    }
-    
-    .card .icon{
-      margin-bottom:16px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-    }
+        .mobile-toggle {
+            display: none;
+            cursor: pointer;
+            color: white;
+            margin-left: auto;
+        }
 
-    .card .icon svg {
-      width: 36px;
-      height: 36px;
-      stroke: var(--text);
-      stroke-width: 1.5;
-    }
-    
-    .card h3 {
-      font-size: 16px;
-      margin-bottom: 8px;
-    }
-    
-    .card p {
-      font-size: 13px;
-      line-height: 1.5;
-    }
+        /* --- Hero Section --- */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 180px;
+            padding-bottom: 100px;
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+        }
 
-    .three{
-      grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
-    }
-    
-    .center{
-      text-align:center;
-    }
+        .hero-tag {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--primary-purple);
+            background: rgba(192, 132, 252, 0.1);
+            border: 1px solid rgba(192, 132, 252, 0.2);
+            padding: 6px 14px;
+            border-radius: 30px;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
 
-    /* ---------- Game Cards ---------- */
-    .game-card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      overflow: hidden;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      position: relative;
-    }
-    
-    .game-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: var(--radius);
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    .game-card:hover::before {
-      opacity: 1;
-    }
-    
-    .game-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
-      border-color: rgba(255,255,255,0.2);
-    }
-    
-    .game-thumbnail {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      transition: transform 0.4s ease;
-    }
-    
-    .game-card:hover .game-thumbnail {
-      transform: scale(1.05);
-    }
-    
-    .game-content {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      min-height: 200px;
-    }
-    
-    .game-name {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      min-height: 20px;
-    }
-    
-    .game-description {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 12px;
-      line-height: 1.4;
-      flex: 1;
-      min-height: 48px;
-    }
-    
-    .game-status {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 11px;
-      margin-top: auto;
-      padding-top: 12px;
-      border-top: 1px solid var(--line);
-    }
-    
-    .status-badge {
-      padding: 4px 10px;
-      border-radius: 8px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    
-    .status-working {
-      background: rgba(16, 185, 129, 0.15);
-      color: #10B981;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-    
-    .status-updating {
-      background: rgba(245, 158, 11, 0.15);
-      color: #F59E0B;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-    }
-    
-    .status-patched {
-      background: rgba(239, 68, 68, 0.15);
-      color: #EF4444;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-    
-    .game-id {
-      color: var(--muted);
-      opacity: 0.6;
-    }
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(40px, 6vw, 80px);
+            line-height: 1.1;
+            font-weight: 600;
+            letter-spacing: -2px;
+            background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 24px;
+        }
 
-    /* ---------- Developer Cards ---------- */
-    .dev-preview {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 16px;
-      margin-top: 24px;
-    }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-muted);
+            max-width: 500px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
 
-    .dev-card-mini {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 24px;
-      text-align: center;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      position: relative;
-    }
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
-    .dev-card-mini::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: var(--radius);
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
 
-    .dev-card-mini:hover::before {
-      opacity: 1;
-    }
+        .btn-primary {
+            background: #eef2ff;
+            color: #000;
+            border: 1px solid #fff;
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
 
-    .dev-card-mini:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 32px rgba(0,0,0,0.3);
-      border-color: rgba(255,255,255,0.15);
-    }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+        }
 
-    .dev-avatar-mini {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      margin: 0 auto 12px;
-      overflow: hidden;
-      border: 2px solid var(--line);
-      transition: all 0.3s ease;
-    }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
 
-    .dev-avatar-mini img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+        /* --- Sections & Grid --- */
+        section {
+            width: 100%;
+            max-width: 1200px;
+            padding: 80px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    .dev-card-mini:hover .dev-avatar-mini {
-      transform: scale(1.1);
-      border-color: rgba(255,255,255,0.3);
-    }
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
 
-    .dev-name-mini {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
+        .section-header h2 {
+            font-family: var(--font-display);
+            font-size: clamp(32px, 5vw, 42px);
+            font-weight: 600;
+            letter-spacing: -1.5px;
+            margin-bottom: 16px;
+        }
 
-    .dev-role-mini {
-      font-size: 11px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
+        .section-header p {
+            color: var(--text-muted);
+            font-size: clamp(16px, 3vw, 18px);
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
-    /* ---------- Showcase Cards ---------- */
-    .showcase-card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      overflow: hidden;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      position: relative;
-    }
+        .gradient-text {
+            background: linear-gradient(90deg, #fff, #999);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    .showcase-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: var(--radius);
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            width: 100%;
+        }
 
-    .showcase-card:hover::before {
-      opacity: 1;
-    }
+        .card {
+            background: rgba(15, 10, 20, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
 
-    .showcase-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
-      border-color: rgba(255,255,255,0.2);
-    }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
 
-    .showcase-thumbnail {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-      transition: all 0.4s ease;
-    }
+        .card:hover::before { opacity: 1; }
+        .card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.15); }
 
-    .showcase-card:hover .showcase-thumbnail {
-      transform: scale(1.05);
-    }
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            color: var(--primary-purple);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-    .showcase-content {
-      padding: 20px;
-    }
+        .card h3 {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 600;
+            z-index: 1;
+        }
 
-    .showcase-title {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
+        .card p {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.6;
+            z-index: 1;
+        }
 
-    .showcase-description {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 10px;
-      line-height: 1.4;
-    }
+        /* --- Footer --- */
+        footer {
+            margin-top: auto;
+            border-top: 1px solid var(--glass-border);
+            width: 100%;
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            background: #020103;
+        }
 
-    .showcase-views {
-      font-size: 11px;
-      color: var(--muted);
-      opacity: 0.6;
-    }
+        footer a { color: white; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.3); }
+        footer a:hover { text-decoration-color: white; }
 
-    /* ---------- Footer ---------- */
-    footer{
-      border-top:1px solid var(--line); 
-      padding:24px 0 40px; 
-      color:var(--muted); 
-      text-align:center;
-      font-size: 12px;
-    }
+        /* --- Divider --- */
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            margin: 20px 0;
+        }
 
-    /* ---------- Mobile Responsive ---------- */
-    @media (max-width: 980px){
-      .cards{grid-template-columns:repeat(2, 1fr)}
-      .three{grid-template-columns:1fr}
-      .dev-preview{grid-template-columns:1fr}
-      
-      .links{display:none}
-      .mobile-menu-toggle{display:flex}
-      
-      .hero {
-        padding: 60px 0 40px;
-      }
-      
-      section {
-        padding: 40px 0;
-      }
+        /* --- How It Works Section --- */
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            width: 100%;
+            margin-top: 40px;
+        }
 
-      .btn {
-        padding: 14px 28px;
-        font-size: 14px;
-      }
-    }
+        .step-card {
+            background: rgba(5, 5, 5, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: 0.3s;
+        }
 
-    @media (max-width: 768px) {
-      .cards{grid-template-columns:1fr}
-      
-      .title {
-        font-size: 28px;
-        flex-direction: column;
-        gap: 12px;
-      }
-      
-      .nobulem-icon {
-        width: 40px;
-        height: 40px;
-      }
-      
-      .actions {
-        flex-direction: column;
-        width: 100%;
-        padding: 0 20px;
-      }
-      
-      .btn {
-        width: 100%;
-        max-width: 100%;
-        padding: 16px 24px;
-        font-size: 14px;
-        border-radius: 14px;
-      }
-      
-      section h2 {
-        font-size: 24px;
-      }
+        .step-card:hover {
+            background: rgba(20, 20, 25, 0.5);
+            border-color: rgba(192, 132, 252, 0.2);
+            transform: translateY(-5px);
+        }
 
-      .card {
-        padding: 20px;
-      }
+        .step-icon-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            color: var(--text-main);
+        }
 
-      .hero {
-        padding: 40px 0 30px;
-      }
+        .step-card h3 {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
 
-      .subtitle {
-        font-size: 12px;
-        padding: 0 10px;
-      }
-    }
-  </style>
+        .step-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .pricing-link {
+            margin-top: 50px;
+            color: var(--text-main);
+            font-weight: 500;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0.8;
+            transition: 0.2s;
+        }
+        .pricing-link:hover { opacity: 1; gap: 10px; }
+
+        /* --- Zekehub Style: FAQ --- */
+        .faq-wrapper {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .faq-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .faq-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .faq-question {
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: var(--font-display);
+            font-size: 15px;
+            color: #fff;
+        }
+
+        .faq-icon {
+            width: 16px;
+            height: 16px;
+            color: #888;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
+            padding: 0 24px;
+            color: #999;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Active State */
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+            color: #fff;
+        }
+
+        .faq-item.active .faq-answer {
+            padding-bottom: 20px;
+            max-height: 200px; 
+        }
+
+        /* --- Mobile Responsive --- */
+        @media (max-width: 900px) {
+            .nav-links { 
+                display: none; 
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--glass-bg);
+                backdrop-filter: blur(20px);
+                border: 1px solid var(--glass-border);
+                border-radius: 16px;
+                padding: 20px;
+                margin-top: 10px;
+                flex-direction: column;
+                gap: 10px;
+                z-index: 1000;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .nav-island { 
+                justify-content: space-between; 
+                padding: 12px 20px;
+                flex-wrap: wrap;
+            }
+            .brand { border: none; }
+            .mobile-toggle { display: block; }
+            .hero { 
+                padding-top: 140px;
+                padding-bottom: 60px;
+            }
+            .hero h1 { font-size: 48px; }
+            .hero p { font-size: 16px; padding: 0 20px; }
+            .hero-actions { flex-direction: column; width: 100%; max-width: 300px; }
+            .btn { width: 100%; }
+            .grid-cards { grid-template-columns: 1fr; }
+            .card { padding: 30px; }
+            section { padding: 60px 20px; }
+            .section-header h2 { font-size: 36px; }
+            .section-header p { font-size: 16px; }
+            .steps-container { grid-template-columns: 1fr; }
+            .step-card { padding: 30px 20px; }
+            .faq-question { padding: 16px 20px; font-size: 14px; }
+            .faq-answer { padding: 0 20px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero { padding-top: 120px; padding-bottom: 40px; }
+            .hero h1 { font-size: 36px; }
+            .hero p { font-size: 15px; }
+            .hero-tag { font-size: 12px; padding: 6px 12px; }
+            .card { padding: 25px; }
+            .card h3 { font-size: 18px; }
+            .card p { font-size: 14px; }
+            .nav-island { padding: 10px; }
+            .brand span { font-size: 14px; }
+            .nav-cta { width: 100%; justify-content: center; margin-top: 10px; order: 3; }
+            footer { padding: 30px 20px; font-size: 13px; }
+        }
+    </style>
 </head>
 <body>
-  <!-- Animated Background -->
-  <div class="bg-animation">
-    <!-- Floating Particles -->
-    <div class="particle particle-1" style="left: 10%; animation-delay: 0s;"></div>
-    <div class="particle particle-2" style="left: 20%; animation-delay: 2s;"></div>
-    <div class="particle particle-3" style="left: 30%; animation-delay: 4s;"></div>
-    <div class="particle particle-1" style="left: 40%; animation-delay: 6s;"></div>
-    <div class="particle particle-4" style="left: 50%; animation-delay: 8s;"></div>
-    <div class="particle particle-2" style="left: 60%; animation-delay: 10s;"></div>
-    <div class="particle particle-3" style="left: 70%; animation-delay: 12s;"></div>
-    <div class="particle particle-1" style="left: 80%; animation-delay: 14s;"></div>
-    <div class="particle particle-4" style="left: 90%; animation-delay: 16s;"></div>
 
-    <!-- Animated Waves -->
-    <div class="wave wave-1"></div>
-    <div class="wave wave-2"></div>
-  </div>
+    <div class="bg-glow"></div>
+    <div class="stars"></div>
 
-  <nav class="nav">
-    <div class="container row">
-      <div class="brand">
-        <img src="https://i.ibb.co/9HfPQdpj/output-onlinepngtools-2.png" alt="Nobulem" class="brand-icon">
-        <span class="brand-text">nobulem.wtf</span>
-      </div>
-
-      <div class="links">
-        <a href="/" style="opacity: 1;">Home</a>
-        <a href="/executors">Executors</a>
-        <a href="/games">Games & Scripts</a>
-        <a href="/showcases">Showcases</a>
-        <a href="/pricing">Pricing</a>
-        <a href="/developers">Developers</a>
-        <a href="/tos">Terms</a>
-        <a href="https://discord.gg/ExH98C3uFH" target="_blank" class="discord-nav">Discord</a>
-      </div>
-
-      <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </div>
-  </nav>
-
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="/">Home</a>
-    <a href="/executors">Executors</a>
-    <a href="/games">Games & Scripts</a>
-    <a href="/showcases">Showcases</a>
-    <a href="/pricing">Pricing</a>
-    <a href="/developers">Developers</a>
-    <a href="/tos">Terms</a>
-    <a href="https://discord.gg/ExH98C3uFH" target="_blank" class="discord-nav">Discord</a>
-  </div>
-
-  <header id="home" class="hero container">
-    <div class="eyebrow">
-      <span class="eyebrow-item">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
-        undetectability
-      </span>
-      <span class="eyebrow-item">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg>
-        smooth
-      </span>
-      <span class="eyebrow-item">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        fast
-      </span>
-    </div>
-    <h1 class="title">
-      <span id="typing-text" class="typing-text">nobulem.wtf</span>
-    </h1>
-    <p class="subtitle">multiple game support • regular updates • top-quality scripts • no bugs • universal loader</p>
-    <div class="actions">
-      <a class="btn primary" href="/games">Use the script</a>
-      <a class="btn discord" href="https://discord.gg/ExH98C3uFH" target="_blank">Join discord server</a>
-    </div>
-  </header>
-
-  <section id="why">
-    <div class="container">
-      <h2 class="center">Why Choose nobulem.wtf?</h2>
-      <p class="center muted">Built by developers for players. Fast and safe.</p>
-      <div class="grid cards">
-        <div class="card">
-          <div class="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <h3>Stable & Secure</h3>
-          <p>Ban prevention, anti-cheat bypasses, and regular updates for a safer experience.</p>
-        </div>
-        <div class="card">
-          <div class="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-          </div>
-          <h3>Weekly Updates</h3>
-          <p>Rapid patches and new game support added constantly.</p>
-        </div>
-        <div class="card">
-          <div class="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </div>
-          <h3>Active Community</h3>
-          <p>Join our Discord to get help and request new features.</p>
-        </div>
-        <div class="card">
-          <div class="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-          </div>
-          <h3>Customer First</h3>
-          <p>Feedback drives the roadmap. If you need it, we prioritize it.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="games">
-    <div class="container">
-      <h2>Latest Games</h2>
-      <p class="muted">Recently added scripts for popular games. <a href="/games" style="text-decoration: underline;">View all games →</a></p>
-
-      <div class="grid three" style="margin-top:20px" id="latest-games">
-        <!-- Games will be loaded dynamically -->
-      </div>
-    </div>
-  </section>
-
-  <section id="showcases">
-    <div class="container">
-      <h2>Popular Showcases</h2>
-      <p class="muted">Most viewed script demonstrations and tutorials. <a href="/showcases" style="text-decoration: underline;">View all showcases →</a></p>
-
-      <div class="grid three" style="margin-top:20px" id="popular-showcases">
-        <!-- Showcases will be loaded dynamically -->
-      </div>
-    </div>
-  </section>
-
-  <section id="developers">
-    <div class="container">
-      <h2>Meet Our Developers</h2>
-      <p class="muted">The talented team behind nobulem.wtf. <a href="/developers" style="text-decoration: underline;">Meet the full team →</a></p>
-
-      <div class="dev-preview">
-        <div class="dev-card-mini" onclick="window.location.href='/developers'">
-          <div class="dev-avatar-mini">
-            <img src="https://i.ibb.co/VWWq91PR/Opera-Snapshot-2025-09-15-224308-www-fotor-com.png" alt="Ace">
-          </div>
-          <h3 class="dev-name-mini">Ace (@ac.me)</h3>
-          <p class="dev-role-mini">Site Developer & UI/UX Designer</p>
-        </div>
-
-        <div class="dev-card-mini" onclick="window.location.href='/developers'">
-          <div class="dev-avatar-mini">
-            <img src="https://i.ibb.co/qYCzvC33/dc040980cd3adf203ba6be9bce0d3a95.webp" alt="Emplic">
-          </div>
-          <h3 class="dev-name-mini">Emplic (@emplic)</h3>
-          <p class="dev-role-mini">Lead Script Developer</p>
-        </div>
-
-        <div class="dev-card-mini" onclick="window.location.href='/developers'">
-          <div class="dev-avatar-mini">
-            <img src="https://cdn.discordapp.com/avatars/1129062752795762819/72f909da293d19719ffcf8d695fa75d8.webp?size=1024" alt="Snake">
-          </div>
-          <h3 class="dev-name-mini">Snake (@violentsnake)</h3>
-          <p class="dev-role-mini">Community Support Specialist</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <div class="container">
-      <div style="margin-bottom:8px"><strong>nobulem.wtf</strong> — undetected</div>
-      <div>© <span id="year"></span> nobulem.wtf • All rights reserved</div>
-    </div>
-  </footer>
-
-  <script>
-
-    // Mobile menu toggle
-    function toggleMobileMenu() {
-      const menu = document.getElementById('mobileMenu');
-      menu.classList.toggle('active');
-    }
-
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', function(event) {
-      const menu = document.getElementById('mobileMenu');
-      const toggle = document.querySelector('.mobile-menu-toggle');
-      
-      if (menu.classList.contains('active') && 
-          !menu.contains(event.target) && 
-          !toggle.contains(event.target)) {
-        menu.classList.remove('active');
-      }
-    });
-
-    // Close mobile menu on link click
-    document.querySelectorAll('.mobile-menu a').forEach(link => {
-      link.addEventListener('click', () => {
-        document.getElementById('mobileMenu').classList.remove('active');
-      });
-    });
-
-    // Set current year
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Typing animation
-    const typingText = document.getElementById('typing-text');
-    const baseText = "nobulem.wtf";
-    const suffixes = [
-      " — Quality.",
-      " — Secure.",
-      " — Reliable.",
-      " — Free.",
-      " — Fast."
-    ];
-    let suffixIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
-    
-    function type() {
-      const currentSuffix = suffixes[suffixIndex];
-      let displayText = baseText;
-      
-      if (!isDeleting) {
-        displayText = baseText + currentSuffix.substring(0, charIndex);
-        typingText.textContent = displayText;
-        charIndex++;
-        
-        if (charIndex > currentSuffix.length) {
-          isDeleting = true;
-          setTimeout(type, 2000);
-          return;
-        }
-        setTimeout(type, 120);
-      } else {
-        charIndex--;
-        displayText = baseText + currentSuffix.substring(0, charIndex);
-        typingText.textContent = displayText;
-        
-        if (charIndex === 0) {
-          isDeleting = false;
-          suffixIndex = (suffixIndex + 1) % suffixes.length;
-          setTimeout(type, 600);
-          return;
-        }
-        setTimeout(type, 60);
-      }
-    }
-
-    // Start typing animation
-    typingText.textContent = baseText;
-    setTimeout(type, 1500);
-
-    // Function to load games dynamically from /games/index.html
-    async function loadLatestGames() {
-      const gamesContainer = document.getElementById('latest-games');
-      
-      try {
-        const response = await fetch('/games/index.html');
-        const html = await response.text();
-        
-        // Create a temporary div to parse the HTML
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = html;
-        
-        // Find all game cards
-        const gameCards = tempDiv.querySelectorAll('.game-card');
-        
-        // Clear container
-        gamesContainer.innerHTML = '';
-        
-        // Get first 3 games and clone them
-        for (let i = 0; i < Math.min(3, gameCards.length); i++) {
-          const clonedCard = gameCards[i].cloneNode(true);
-          
-          // Get the game ID from the card
-          const gameId = clonedCard.getAttribute('data-game-id');
-          
-          // Override the onclick to go to games page with hash
-          if (gameId) {
-            clonedCard.onclick = function() {
-              window.location.href = `/games#${gameId}`;
-            };
-          } else {
-            clonedCard.onclick = function() {
-              window.location.href = '/games';
-            };
-          }
-          
-          gamesContainer.appendChild(clonedCard);
-        }
-        
-        console.log('✅ Games loaded successfully:', gameCards.length);
-      } catch (error) {
-        console.error('❌ Error loading games:', error);
-        gamesContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--muted);">Failed to load games. <a href="/games">View all games →</a></p>';
-      }
-    }
-
-    // Function to load showcases dynamically from /showcases/index.html
-    async function loadPopularShowcases() {
-      const showcasesContainer = document.getElementById('popular-showcases');
-      
-      try {
-        const response = await fetch('/showcases/index.html');
-        const html = await response.text();
-        
-        // Create a temporary div to parse the HTML
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = html;
-        
-        // Find all video cards
-        const videoCards = tempDiv.querySelectorAll('.video-card');
-        
-        // Clear container
-        showcasesContainer.innerHTML = '';
-        
-        // Get first 3 videos and convert to showcase cards
-        for (let i = 0; i < Math.min(3, videoCards.length); i++) {
-          const videoCard = videoCards[i];
-          
-          // Extract data from video card
-          const thumbnail = videoCard.querySelector('.video-thumbnail');
-          const title = videoCard.querySelector('.video-title');
-          const views = videoCard.querySelector('.video-views');
-          
-          // Create showcase card
-          const showcaseCard = document.createElement('div');
-          showcaseCard.className = 'showcase-card';
-          showcaseCard.onclick = function() { 
-            window.location.href = '/showcases';
-          };
-          
-          showcaseCard.innerHTML = `
-            <img src="${thumbnail ? thumbnail.src : ''}" alt="${title ? title.textContent : 'Video'}" class="showcase-thumbnail">
-            <div class="showcase-content">
-              <h3 class="showcase-title">${title ? title.textContent : 'Video Showcase'}</h3>
-              <div class="showcase-views">${views ? views.textContent : '0 views'}</div>
+    <div class="nav-wrapper">
+        <nav class="nav-island">
+            <div class="brand" onclick="window.location.href='/'">
+                <img src="https://i.ibb.co/9HfPQdpj/output-onlinepngtools-2.png" alt="Nobulem Logo">
+                <span>nobulem.wtf</span>
             </div>
-          `;
-          
-          showcasesContainer.appendChild(showcaseCard);
-        }
+
+            <div class="nav-links">
+                <a href="/" class="nav-link active">Home</a>
+                <a href="/executors" class="nav-link">Executors</a>
+                <a href="/games" class="nav-link">Games & Scripts</a>
+                <a href="/showcases" class="nav-link">Showcases</a>
+                <a href="/pricing" class="nav-link">Pricing</a>
+                <a href="/developers" class="nav-link">Developers</a>
+                <a href="/tos" class="nav-link">Terms</a>
+            </div>
+
+            <a href="https://discord.gg/ExH98C3uFH" target="_blank" class="nav-cta">
+                <i data-lucide="message-circle" style="width:16px;"></i> Discord
+            </a>
+
+            <div class="mobile-toggle">
+                <i data-lucide="menu"></i>
+            </div>
+        </nav>
+    </div>
+
+    <header class="hero">
+        <div class="hero-tag">
+            <i data-lucide="sparkles" style="width: 14px;"></i>
+            Redefining Roblox Exploiting
+        </div>
+        <h1>
+            nobulem.wtf
+        </h1>
+        <p>
+            Quality scripts hub. Bold. Fast. Clean. <br>
+            Extending beyond the standard.
+        </p>
+        <div class="hero-actions">
+            <a href="/games" class="btn btn-primary">
+                Use the script <i data-lucide="arrow-right" style="width:16px;"></i>
+            </a>
+            <a href="https://discord.gg/ExH98C3uFH" target="_blank" class="btn btn-secondary">
+                Join Discord
+            </a>
+        </div>
+    </header>
+
+    <div class="divider"></div>
+
+<section id="features">
+    <div class="section-header">
+        <h2>Where Quality Meets <span class="gradient-text">Innovation</span></h2>
+        <p>Everything we design is made to work in harmony. True Quality.</p>
+    </div>
+
+    <div class="grid-cards" id="cards-container" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+        <div class="card">
+            <div class="card-icon">
+                <i data-lucide="shield-check"></i>
+            </div>
+            <h3>Stable & Secure</h3>
+            <p>Advanced ban prevention and regular updates ensuring your account safety is our top priority.</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">
+                <i data-lucide="zap"></i>
+            </div>
+            <h3>Weekly Updates</h3>
+            <p>Our team pushes rapid patches and new game support constantly. You never have to wait.</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">
+                <i data-lucide="users"></i>
+            </div>
+            <h3>Active Community</h3>
+            <p>Join thousands of users in our Discord. Get help, request features, and chat with devs.</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">
+                <i data-lucide="code-2"></i>
+            </div>
+            <h3>Universal Loader</h3>
+            <p>One script to rule them all. Our loader automatically detects the game and applies the correct script.</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">
+                <i data-lucide="wallet"></i>
+            </div>
+            <h3>Affordable</h3>
+            <p>Get the best value for your money. Our pricing is designed to be accessible without compromising on quality or features.</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">
+                <i data-lucide="smartphone"></i>
+            </div>
+            <h3>Compatible</h3>
+            <p>Built to run everywhere. Whether you're on PC or Mobile, our scripts are optimized for all major executors.</p>
+        </div>
+    </div>
+</section>
+
+    <div class="divider"></div>
+
+    <section id="how-it-works">
+    <div class="section-header">
+        <h2>How it Works?</h2> 
+    </div>
+
+    <div class="steps-container">
+        <div class="step-card">
+            <div class="step-icon-circle">
+                <i data-lucide="monitor-cog" style="width: 20px;"></i> </div>
+            <h3>Get an executor</h3> <p>Simply get a supported executor from nobulem.wtf/executors.</p>
+        </div>
+
+        <div class="step-card">
+            <div class="step-icon-circle">
+                <i data-lucide="download" style="width: 20px;"></i>
+            </div>
+            <h3>Copy the script</h3>
+            <p>Copy the universal loader script directly from the dashboard after bypassing the key system.</p>
+        </div>
+
+        <div class="step-card">
+            <div class="step-icon-circle">
+                <i data-lucide="terminal" style="width: 20px;"></i>
+            </div>
+            <h3>Execute the script</h3>
+            <p>Paste the script into your executor (Volcano, Wave, etc.) and enjoy the features!</p>
+        </div>
+    </div>
+
+    <a href="/pricing" class="pricing-link">
+        View Pricing Plans <i data-lucide="arrow-right" style="width: 16px;"></i>
+    </a>
+</section>
+
+<div style="height: 80px;"></div>
+
+<section id="faq">
+    <div class="section-header">
+        <h2>Frequently Asked Questions</h2>
+    </div>
+
+    <div class="faq-wrapper">
+        <div class="faq-item">
+            <div class="faq-question">
+                How do I get my key after purchasing?
+                <i data-lucide="plus" class="faq-icon"></i>
+            </div>
+            <div class="faq-answer">
+                <p>Since Nobulem is free, you simply complete the key system link to generate your temporary access key.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                Why is nobulem free?
+                <i data-lucide="plus" class="faq-icon"></i>
+            </div>
+            <div class="faq-answer">
+                <p>Nobulem was created in response to overpriced or underperforming paid scripts. The developer made a high-quality free solution with a key system for fair access.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                How often does Nobulem update?
+                <i data-lucide="plus" class="faq-icon"></i>
+            </div>
+            <div class="faq-answer">
+                <p>Nobulem updates daily or as needed to stay compatible with Roblox patches.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                Is Nobulem detectable?
+                <i data-lucide="plus" class="faq-icon"></i>
+            </div>
+            <div class="faq-answer">
+                <p>Risks come mainly from executors, not Nobulem itself. It's built for stealth, but users should always use undetected executors.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                How is Nobulem maintained?
+                <i data-lucide="plus" class="faq-icon"></i>
+            </div>
+            <div class="faq-answer">
+                <p>Through our key system and community donations that fund servers and updates.</p>
+            </div>
+        </div>
+
+         <div class="faq-item">
+            <div class="faq-question">
+                How do I contact support?
+                <i data-lucide="plus" class="faq-icon"></i>
+            </div>
+            <div class="faq-answer">
+                <p>Join our Discord server using the button in the top navigation bar to open a ticket.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <footer>
+        <div style="margin-bottom: 12px;">
+            <strong>nobulem.wtf</strong> — undetected
+        </div>
+        <div>
+            © <span id="year"></span> nobulem.wtf • <a href="/tos">Terms</a> • <a href="/privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Update Year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileToggle = document.querySelector('.mobile-toggle');
+        const navLinks = document.querySelector('.nav-links');
         
-        console.log('✅ Showcases loaded successfully:', videoCards.length);
-      } catch (error) {
-        console.error('❌ Error loading showcases:', error);
-        showcasesContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--muted);">Failed to load showcases. <a href="/showcases">View all showcases →</a></p>';
-      }
-    }
-
-    // Load content when page is ready
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('🚀 Page loaded, fetching content...');
-      loadLatestGames();
-      loadPopularShowcases();
-    });
-
-    // Add particle regeneration
-    function createParticle() {
-      const particle = document.createElement('div');
-      particle.className = `particle particle-${Math.floor(Math.random() * 4) + 1}`;
-      particle.style.left = Math.random() * 100 + '%';
-      particle.style.animationDelay = '0s';
-      
-      const bgAnimation = document.querySelector('.bg-animation');
-      if (bgAnimation) {
-        bgAnimation.appendChild(particle);
+        mobileToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileToggle.innerHTML = navLinks.classList.contains('active') 
+                ? '<i data-lucide="x"></i>' 
+                : '<i data-lucide="menu"></i>';
+            lucide.createIcons();
+        });
         
-        setTimeout(() => {
-          if (particle.parentNode) {
-            particle.parentNode.removeChild(particle);
-          }
-        }, 35000);
-      }
-    }
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileToggle.innerHTML = '<i data-lucide="menu"></i>';
+                lucide.createIcons();
+            });
+        });
 
-    setInterval(createParticle, 3000);
+        // Mouse Hover Glow Effect for Cards
+        const cards = document.getElementById("cards-container");
+        
+        document.querySelectorAll(".card").forEach((card) => {
+            card.onmousemove = (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
 
-    // Smooth anchor navigation
-    document.querySelectorAll('a[href^="#"]').forEach(a=>{
-      a.addEventListener('click', e=>{
-        const id = a.getAttribute('href').slice(1);
-        const el = document.getElementById(id);
-        if(el){
-          e.preventDefault();
-          window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 70, behavior:'smooth'});
-        }
-      });
-    });
-  </script>
+                card.style.setProperty("--mouse-x", `${x}px`);
+                card.style.setProperty("--mouse-y", `${y}px`);
+            };
+        });
+
+        // FAQ Accordion Logic
+        const faqItems = document.querySelectorAll('.faq-item');
+
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                // Close other items (optional, remove this block if you want multiple open)
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) otherItem.classList.remove('active');
+                });
+
+                // Toggle current
+                item.classList.toggle('active');
+            });
+        });
+    </script>
 </body>
 </html>
